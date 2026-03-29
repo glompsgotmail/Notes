@@ -1,0 +1,287 @@
+\documentclass{article}
+\usepackage{alexconfig}
+\title{Homotopy Type Theory: Chapter 1}
+
+\begin{document}
+\maketitle
+
+\section{Type Theory}
+
+\subsection{Type Theory vs Set Theory}
+
+\begin{definition}[Rules and Judgements]
+\
+
+In a deductive system, we have a collection of \textbf{rules}, and by applying those rules, we can create things called \textbf{judgements}.  
+\end{definition}
+
+\begin{definition}[Type]
+\
+
+In type theory, the most basic judgement is: $$a:A$$and means "$a$ has type $A$" or "the type $A$ has a proof $a$", or in homotopy type theory, "$a$ is a point in the space $A$". In type theory, every element has a type.
+\end{definition}
+
+\begin{definition}[Equality]
+\
+
+In type theory, there are two types of equality. Given $a: A$, $b:A$, we can create a new type $$a =_A b$$which may or may not be empty (but we say a type is "inhabited"). This is called \textbf{propositional equality}.
+
+We also have judgemental equality, saying $$a \equiv b$$on the same level as a statement like $a:A$. This is basically saying, "by definition, $a$ is equal to $b$", and is called \textbf{judgemental equality}. 
+\end{definition}
+
+\begin{example}
+\
+
+If we let a function $f: \mathbb{N} \to \mathbb{N}$ be defined as $f(x) \equiv x^2$, then judgementally, (by definition), $f(3) \equiv 3^2$. 
+\end{example}
+
+\begin{remark}
+\
+
+Judgemental equality can't be used as an assumption or negation. For instance, it doesn't make sense to say "if $x$ is definitionally equal to $y$, then $z$ is not definitionally equal to $w$". You're the one deciding lil bro.
+
+The two forms of judgement, typing and equality, form the basis of type theory.
+\end{remark}
+
+\begin{definition}[Context]
+\
+
+We also may have implicit assumptions about type. For example, typing $$m+n: \mathbb{N}$$as above gives the implicit assumption that $m: \mathbb{N}$ and $n: \mathbb{N}$. These implicit assumptions are called \textbf{context}. 
+\end{definition}
+
+\subsection{Function Types}
+
+\begin{definition}[Function Types]
+\
+
+Given types $A$, $B$, we can construct the type $$A \to B$$of \textbf{functions} with domain $A$ and codomain $B$. Functions are primitive, in the sense that we create them and tell you what you can do with them. 
+
+Given some function $f: A \to B$, you can \textbf{apply} the function $f$ to some $a : A$ to get $f(a) : B$, and we call this the \textbf{value} at $a$, and also note that we do notate $f(a)$ as $f a$ often.   
+
+In order to define a function $f: A \to B$, we often say $f(x) = \Phi$ where $\Phi$ is some expression that may or may not depend on $x$, and we want to check that $\Phi: B$ assuming $x: A$.
+\end{definition}
+
+\begin{definition}[$\lambda$ -abstraction]
+\
+
+We can also define functions anonymously via $\lambda$-abstraction as follows:
+
+$$(\lambda(x:A). \Phi): A \to B$$after the $\lambda$, we have parameters to take in, in this case just some $x$ of type $A$, and the dot signifies it returns $\Phi$ with $x$ substituted for whatever value of $x$ was provided. 
+\end{definition}
+
+\begin{example}
+\
+
+For some $y :B$, we have $(\lambda(x:A).y): A\to B$, the \textbf{constant function}. 
+\end{example}
+
+\begin{example}
+\
+
+We may also use implicit $\lambda$-abstraction, meaning we can write $$g(x,-)$$to denote $$\lambda y. g(x,y)$$
+\end{example}
+
+\begin{definition}[$\beta$-conversion]
+\
+
+By definition, $$(\lambda x. \Phi)(a) \equiv \Phi'$$where $\Phi'$ is $\Phi$ but all ocurrences of $x$ have been replaced by $a$. This is called the \textbf{computation rule}, or in $\lambda$ calculus, the $\beta$-conversion
+\end{definition}
+
+\begin{example}
+\
+
+$$(\lambda x. x+x)(2) = 2 + 2 $$(not necessarily equal to $4$ we haven't proved that yet)
+\end{example}
+
+\begin{definition}[$\eta$-expansion]
+\
+
+We also define: $$\lambda x.f(x) \equiv f$$and this is called the \textbf{uniqueness principle for function types}, because this is saying that $f$ is uniquely determined by it's values for all $x$ in a type. 
+
+It's also called the $\eta$-expansion in $\lambda$ calculus
+\end{definition}
+
+\begin{remark}
+\
+
+Consider $$(f(x) \equiv \lambda y:\mathbb{N}. x+y): \mathbb{N} \to (\mathbb{N} \to \mathbb{N})$$This function takes in some $x$, and returns another function of a variable $y$.
+
+What happens if we do $f(y)$. If we just replace all occurences of $x$ with $y$ as defined by $\beta$-reduction, we get that $f(y) = \lambda y. y+y$. But there is an issue. Previously, the $y$ was referring to what we $\beta$-reduced by, or what we put into $f(y)$. But now, the $y$ is referring to the argument of the anonymous function, $\lambda y$. These are different $y$'s.
+
+The solution is that $f(y) = \lambda z. y+z$, we basically rename the variable.
+\end{remark}
+
+\begin{definition}[Currying]
+\
+
+If we want a function in two variables, we define a function $f: A \to B \to C$ via: $$f(x,y) \equiv \Phi$$and $$f \equiv \lambda x:A. \lambda y:B. \Phi$$this is called \textbf{currying}, we basically return another function. 
+\end{definition}
+
+\subsection{Universes}
+\
+
+\begin{definition}[Universes]
+\
+
+A \textbf{universe} is a type whose elements are also types. 
+
+We might wish that there be a universe which includes all types, but we actually end up with the type False being inhabited (which implies that the type False is actually true, which might not be a great outcome).
+
+We instead have a hierarchy of universes: $$\mathcal{U}_0: \mathcal{U}_1 : \mathcal{U}_2 : \dots$$such that each universe is an element of the next. 
+
+We also stipulate that the universes are cumulative, so if some type $A: \mathcal{U}_n$, it is also an element of $A: \mathcal{U}_{n+1}$ and so on...
+\end{definition}
+
+\begin{remark}
+\
+
+When we say $A$ is a type, we say it is an element of some universe, $$A : \mathcal{U}_i$$we also usually omit the numberings (because we generally don't care to explicitly enumerate these things), so $$\mathcal{U}_n : \mathcal{U}_{n+1}$$becomes $$\mathcal{U}: \mathcal{U}$$This method of omitting indices is called \textbf{typical ambiguity}. 
+\end{remark}
+
+\begin{definition}[Families of Types]
+\
+
+A type-valued function $$B: A \to \mathcal{U}$$is called a \textbf{family of types}
+\end{definition}
+
+\begin{example}
+\
+
+The family of finite sets can be expressed as $$\text{Fin}(n): \mathbb{N} \to \mathcal{U}$$where $\text{Fin}(n)$ is a type with exactly $n$ elements, $$\text{Fin}(n) = \{0_n, 1_n, \dots, (n-1)_n\}$$with the subscripts to make it clear that $0_4 : \text{Fin}(3)$ is not be the same element as $0_4 : \text{Fin}(4)$ and none of these are equal to $0 : \mathbb{N}$
+\end{example}
+
+\begin{example}
+\
+
+The constant type family $$B: \mathcal{U}$$given by $$\lambda x:A.B : A \to \mathcal{U}$$
+\end{example}
+
+\begin{example}
+\
+
+There is no type family $$\lambda(i:\mathbb{N}): \mathcal{U}_i$$because firstly, there is no universe large enough, and secondly, we don't even index universes with natural numbers?
+\end{example}
+
+\section{Dependent Types ($\Pi$-types)}
+
+\begin{definition}[Dependent Types]
+\
+
+\textbf{Dependent types} are a generalization of function types. Elements of a dependent type are functions whose output type isn't fixed, it can vary depending on the input. We notate dependent types by:
+
+$$\Pi_{(x:A)} B(x)$$They are called $\Pi$-types because they are pretty closely linked to cartesian products.
+
+Via $\lambda$-abstraction: $$f \equiv \lambda (x:A).\Phi: \Pi_{x:A} B(x)$$
+
+And if we apply $\beta$-conversion, we get an output $f(a) : B(a)$, where $f(a)$ is an element of the type $B(a)$
+\end{definition}
+
+\begin{example}
+\
+
+Consider the function $$\text{fmax} : \Pi_{(n : \mathbb{N})} \text{Fin}(n+1)$$which returns $$\text{fmax}(n) \equiv n_{n+1} : \text{Fin}(n+1)$$
+\end{example}
+
+\begin{definition}[Polymorphic Functions]
+\
+
+A \textbf{polymorphic} function is a function which itself may vary based on the type of it's input. In a sense, it can accept inputs of multiple types, and it's behavior changes based on which type it's input belongs to. 
+\end{definition}
+
+\begin{example}
+\
+
+The polymorphic identity function: $$\text{id}: \Pi_{A : \mathcal{U}} A \to A$$is given by $$\text{id} \equiv \lambda (A: \mathcal{U}). \lambda (x:A).x$$
+\end{example}
+
+\begin{example}
+\
+
+The swap function, which given a curried function, changes the order in which you apply the $\beta$-reductions:
+
+$$\text{swap}: \Pi_{A : \mathcal{U}} \Pi_{B: \mathcal{U}} \Pi_{C: \mathcal{U}} (A \to B \to C) \to (B \to A \to C)$$which takes $$\text{swap} \equiv \lambda(A : \mathcal{U}).\lambda(B: \mathcal{U}).\lambda (C: \mathcal{U}).(\lambda(x:A).\lambda(y:B).\lambda(z:C).\Phi).(\lambda(y:B).\lambda(x:A).\lambda(Z:C).\Phi)$$
+\end{example}
+
+\subsection{Product Types}
+
+\begin{remark}
+\
+
+When we introduce a new type, we generally specify these things:
+
+\begin{enumerate}
+    \item \textbf{formation rules}: how to form new types of this kind
+    \item \textbf{construction rules}: how to construct new elements in types of this kind
+    \item \textbf{elimination rules}: how to use elements of this type (functions have one eliminator, that being applying an input to a function, aka $\beta$-reduction)
+    \item \textbf{computation rules}: how eliminators act on constructors (for functions, the computation rule is that $(\lambda x.\Phi)(a)$ is by definition, equal to substituting all ocurrences of $x$ in $\Phi$ for $a$) 
+    \item \textbf{uniqueness principle}: an optional principle which characterizes maps in/out of the type (for functions, the uniqueness principle is that $f \equiv \lambda x.f(x)$). Sometimes, uniqueness isn't a judgement but instead it is propositional (can be derived from other judgements), in which case we call it a \textbf{propositional uniqueness principle}. 
+\end{enumerate}
+\end{remark}
+
+\begin{definition}[Cartesian Product]
+\
+
+Given types $A, B : \mathcal{U}$, let $A \times B: \mathcal{U}$ be a type called their \textbf{cartesian product}. For $a: A$ and $b: B$, judgementally, $(a,b): A \times B$
+
+Elimination rule: Given some $g: A \to (B \to C)$, we define some function $$f: A \times B \to C$$$$f((a,b)) \equiv g(a)(b)$$
+\end{definition}
+
+\begin{definition}[Unit Type]
+\
+
+The \textbf{unit type} is \textbf{1}, and there is a single element of this type, $$\star : \textbf{1}$$
+\end{definition}
+
+\begin{example}
+\
+
+We can have projection functions $$\text{pr}_1: A \times B \to A$$$$\text{pr}_2: A \times B \to B$$such that $$\text{pr}_1((a,b)) \equiv a$$and $$\text{pr}_2((a,b)) \equiv b$$
+\end{example}
+
+\begin{definition}[Recursor]
+\
+
+The \textbf{recursor} is defined as $$\text{rec}_{A \times B}: \Pi_{C : \mathcal{U}} (A \to B \to C) \to (A\times B \to C)$$where $$\text{rec}_{A \times B}(C,g,(a,b)) \equiv g(a)(b)$$ 
+
+The recursor is actually defined on things called inductive types, which are a generalized version of product types, where they will actually be recursive.
+\end{definition}
+
+\begin{example}
+\
+
+$$\text{pr}_1 \equiv \text{rec}_{A \times B}(A, \lambda a. \lambda b.a)$$and$$\text{pr}_2 \equiv \text{rec}_{A \times B}(B, \lambda a. \lambda b.b)$$
+\end{example}
+
+\begin{exercise}
+\
+
+Define the recursor in terms of the projection functions and vice versa.
+\end{exercise}
+
+\begin{solution}
+\
+
+(Recursor in terms of Projection) $$\text{rec}_{A \times B} \equiv \lambda(C: \mathcal{U}).\lambda(g: A \to B \to C).\lambda(x: A \times B).g(\text{pr}_1(x))(\text{pr}_2(x))$$
+
+(Projections in terms of recursor) 
+
+$$\text{pr}_1 \equiv \lambda(C: \mathcal{U}).\lambda(x: A \times B).\text{rec}_{A \times B}(\lambda(a: A).\lambda(b:B).a)(x)$$
+
+$$\text{pr}_2 \equiv \lambda(C: \mathcal{U}).\lambda(x: A \times B).\text{rec}_{A \times B}(\lambda(a: A).\lambda(b:B).b)(x)$$
+\end{solution}
+
+\begin{proposition}
+\
+
+There exists a function of type $$\text{uniq}_{A \times B}((a, b)) : \Pi_{x: A \times B} ((\text{pr}_1(x), \text{pr}_2(x)) =_{A\times B} x)$$showing that every element of $A \times B$ is equal to a pair.
+\end{proposition}
+
+\begin{customproof}
+\
+
+Let $\text{uniq}_{A\times B}((a,b)) \equiv \text{refl}_{(a,b)}$, where $\text{refl}_{x}: x =_A x$ for any $x:A$. 
+
+This, combined with the identity $(\text{pr}_1((a,b)), \text{pr}_2((a,b))) \equiv (a,b)$ means that $$\text{refl}_{(a,b)}: (a,b) =_{A\times B} (a,b)$$is also of type $$\text{refl}_{(a,b)} : (\text{pr}_1((a,b)), \text{pr}_2((a,b))) \equiv_{A \times B} (a,b)$$and this is well typed since they are judgementally equal.
+\end{customproof}
+
+\end{document}

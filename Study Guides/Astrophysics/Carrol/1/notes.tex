@@ -1,0 +1,172 @@
+\documentclass{article}
+\usepackage{alexconfig}
+\title{Carrol Astrophysics Chapter 1: The Celestial Sphere}
+
+\begin{document}
+\maketitle
+
+\section{Geocentric Models of the Universe}
+\
+
+\begin{example}[Plato's Model of the Universe]
+\
+
+Plato theorirzed that celestial bodies were fixed on a sphere that rotated with a constant speed about the Earth. This means that all the stars should move with a constant speed across our night sky, but this was not the case.
+\end{example}
+
+\begin{definition}[Celestial Poles and Equator]
+\
+
+The \textbf{celestial poles} are extensions of the north and south poles upward, "piercing" the heavens above. The \textbf{celestial equator} was also an extension of the equator upwards.    
+\end{definition}
+
+\begin{definition}[Retrograde Motion]
+\
+
+When an object in the sky appears to suddenly change direction, it is called \textbf{retrograde motion}. 
+\end{definition}
+
+\begin{example}
+\
+
+Mars exhibits retrograde motion at certain times.
+\end{example}
+
+\begin{example}[Hipparchus's Model of the Universe]
+\
+
+To adress retrograde motion, Hipparchus proposed that most stars indeed were moving in a constant rotation, called the \textbf{deferent}, but that some stars had their own rotation about a point in the deferent, which was called their \textbf{epicycle}. 
+
+This system was improved by Ptolemy, who added the concept of an \textbf{equant}, which was the point from where the motion of a star in an epicycle appeared constant. He also moved the Earth away from the center of the deferent.
+\end{example}
+
+\begin{example}[Copernicus's Discoveries]
+\
+
+Copernicus introduced the concept of a heliocentric model. By noticing that Mercury and Venus are never seen more than $28^\circ$ and $47^\circ$ degrees East or West of the Sun, we can deduce that they are orbiting closer to the Sun than the Earth is.
+\end{example}
+
+\begin{definition}[Inferior Planets]
+\
+
+\textbf{Inferior planets} are planets that are orbiting closer to the Sun than the Earth. \textbf{Superior planets} are planets that are orbiting farther from the Sun than the Earth.
+
+The \textbf{greatest Eastern/Western elongation} is the largest angle that a planet/object can be seen away from the Sun. For inferior planets, this will be some angle less than $90$ degrees.
+
+Superior planets can be seen in an alignment known as \textbf{opposition}, where they are on the opposite side of the sky as the Sun.
+
+Inferior planets can be seen in \textbf{inferior conjunction}, when they are in between the Earth and the Sun 
+\end{definition}
+
+\begin{definition}[Orbital Periods]
+\
+
+The \textbf{synodic period} of a celestial object is the time it takes for that object to return to the same configuration about the Sun.
+
+The \textbf{sidereal period} of an object is the actual time it takes for an object to make a complete orbit, relative to the background stars (which are very far away and assumed to be pretty stationary).
+\end{definition}
+
+\begin{theorem}
+\
+
+If $S$ is the synodic period of an object, $P$ is the sidereal period of a celestial object, and $P_\oplus$ is the sidereal period of the Earth, the three are related by $$\frac{1}{S} = \begin{cases}
+    \frac{1}{P} - \frac{1}{P_\oplus} & \text{for inferior objects}\\
+    \frac{1}{P_\oplus} - \frac{1}{P} & \text{for superior objects}\\
+\end{cases} $$
+\end{theorem}
+
+\section{Positions on the Celestial Sphere}
+
+\begin{definition}[Altitude-Azimuth Coordinates]
+\
+
+The \textbf{altitude-azimuth coordinate system} assigns each celestial object two coordinates. First, consider a plane passing through the observer, the center of the Earth, and the star you are looking at. Along this plane, the \textbf{altitude} is the angle from the horizon to the star you are looking at, and the \textbf{azimuth} is the angle from the North pole to the plane (where East is positive).
+
+The plane intersecting the North pole, the South pole, and the observer is called the \textbf{meridian}. 
+
+THe \textbf{zenith} is the angle between straight vertical for the observer, and the star they are looking at, in the altitude plane. Zenith and altitude should always add to $90^\circ$
+\end{definition}
+
+\begin{definition}[Ecliptic]
+\
+
+By photographing the position of the Sun at midday every day, we can see that it see that it seems to move throughout the sky. This path is called the \textbf{ecliptic}. 
+\end{definition}
+
+\begin{definition}[Time]
+\
+
+\textbf{Solar time} is the time it takes for the Sun to cross the meridian. Since the Earth is orbiting around the sun, on average, the Earth must rotate $361^\circ$ in one solar day
+
+\textbf{Sidrereal time} is the time it takes for distant celestial objects to cross the meridian.
+\end{definition}
+
+\begin{definition}[Equinoxes and Solstices]
+\
+
+Twice a year, the ecliptic crosses the celestial equator. When crossing from South to North, the location is called the \textbf{vernal equinox}. When crossing from North to South, it is called the \textbf{autumnal equinox}.  
+
+The northernmost point of the ecliptic is called the \textbf{summer solstice}. The southernmost point of the ecliptic is called the \textbf{winter solstice}. 
+\end{definition}
+
+\begin{definition}[Equatorial Coordinates]
+\
+
+\textbf{Equatorial coordinates} are given by two values:
+
+\textbf{Declination}, or $\delta$, is measured in degrees North or South of the celestial equator.
+
+\textbf{Right ascension}, or $\alpha$, is measured East, from the vernal equinox to the object in question. It is given in hours, minutes, and seconds.
+\end{definition}
+
+\begin{remark}
+\
+
+Equatorial coordinates may experience some variation due to precession of the Earth's axis, and other wobbling, but overall it is pretty accurate.
+\end{remark}
+
+\begin{definition}[Sidereal Time]
+\
+
+Since the vernal equinox is stationary in the sky, and the Earth rotates under it, we can define \textbf{local sidereal time} to be the amount of time since the vernal equinox last crossed the meridian.
+\end{definition}
+
+\begin{definition}[Precession]
+\
+
+\textbf{Precession} is the wobbling of the Earth's axis of rotation due to the Earth not being a perfect sphere, and gravity from the moon and stars. 
+\end{definition}
+
+\begin{example}
+\
+
+The precession of the Earth has a period of $25770$ years.
+\end{example}
+
+\begin{definition}[Epochs]
+\
+
+Precession will change the location of the vernal equinox, so we must talk about equatorial coordinates in the context of a specific \textbf{epoch}, or a commonly agreed upon time for when the position of the equinox is well known. 
+\end{definition}
+
+\begin{proposition}[Accounting for Precession]
+\
+
+Changes in the location of the vernal equinox are given by the following equation: $$\Delta \alpha = M + N\sin\alpha\tan\delta$$$$\Delta \delta = N \cos \alpha$$where $$M = 1.2812323^\circ T + 0.0003879^\circ T^2 + 0.0000101^\circ T^3$$$$N = 0.5567530^\circ T - 0.0001185^\circ T^2 - 0.0000116^\circ T^3$$and$$T = \frac{t-2000}{100}$$where $t$ is the current Julian year.
+\end{proposition}
+
+\begin{example}[Measurements of Time]
+\
+
+The \textbf{Julian date} is the amount of days that have elapsed since noon on January $1$st, $4713$ BC.
+
+\textbf{Heliocentric Julian date} is the Julian time of events if they were seen from the center of the Sun.   
+\end{example}
+
+\begin{theorem}
+\
+
+
+\end{theorem}
+
+\end{document}

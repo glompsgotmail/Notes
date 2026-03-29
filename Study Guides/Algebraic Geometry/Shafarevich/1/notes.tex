@@ -1,0 +1,128 @@
+\documentclass{article}
+\usepackage{alexconfig}
+\title{Basic Algebraic Geometry Section 1 Part 1 Notes}
+
+\begin{document}
+\maketitle
+\
+
+\section{Plane Curves}
+
+\begin{definition}[Fields]
+	\
+
+	A \textbf{field} is a ring where every element is a unit (has a multiplicative inverse) besides $0$
+\end{definition}
+
+\begin{definition}[Field Extension]
+	\
+
+	Given a field $k$, another field $F$ is called a \textbf{extension field} of $k$ if the operations in $F$ restricted to $k$ are the same as the operations of $k$. So, for $a,b,c \in k$, if $$ab = c$$in $F$, then $$ab = c$$in $k$.
+
+	The pair of fields $F, k$ is called a \textbf{field extension} and denoted $$\frac{F}{k}$$
+
+	In addition, we can think of $F$ as a vector space over $k$, and the basis of $F$ as a $k$-vector space is the \textbf{degree of the field extension} and is denoted $[F:k]$.
+\end{definition}
+
+\begin{definition}[Affine Space]
+	\
+
+	Given a field $k$, the \textbf{affine space} denoted $\mathbb{A}^n$ is the cartesian product $k^n$. So, for $a_1 \dots a_n \in k$, elements of $\mathbb{A}^n$ look like $$(a_1, \dots, a_n)$$
+\end{definition}
+
+\begin{definition}[Algebraic Plane Curve]
+	\
+
+	An \textbf{algebraic plane curve} is the set of points which satisfy the equation $$f(x,y) = 0$$where $f$ is a nonconstant polynomial, $x, y \in k$ for some field $k$, and the coefficients of $f$ are also in $k$.
+
+	Then, $f \in k[x,y]$.
+
+	A curve of degree $2$ is called \textbf{conic}, a curve of degree $3$ is called \textbf{cubic}
+\end{definition}
+
+
+\begin{definition}[Unique Factorization Domain]
+	\
+
+	An integral domain $R$ (ring with no zero divisors) is a \textbf{unique factorization domain} if for all $r \in R$, $r$ can be written as a finite product of irreducible elements, $$r = r_1 r_2  \dots r_n$$where an irreducible element $r_1 \in R$ is an element with no multiplicative inverse.
+
+	Uniqueness is up to multiplication by units, because for some factor $r_1$, if we have unit $u$, we can just write $u u ^{-1} r_1$, and this should not be counted as "unique".
+\end{definition}
+
+\begin{example}
+	\
+
+	The polynomial ring $k[x,y]$ is a UFD.
+\end{example}
+
+\begin{proposition}
+	\
+
+	If some $f \in k[x,y]$ has factors $$f = f_1 f_2 \dots f_n$$then the zeros of $f$ are the union of all the zeros of the individual factors $f_i$.
+\end{proposition}
+
+\begin{customproof}
+	\
+
+	If $(x_i, y_i)$ is a zero for some $f_i$, then $f(x_i,y_i) = 0$, so $$f(x_i, y_i) = f_1 \dots f_{i-1} \cdot 0 \cdot f_{i+1} \dots f_n = 0$$so $(x_i, y_i)$ is a zero for $f$ as well.
+\end{customproof}
+
+\begin{lemma}
+	\
+
+	Let $k$ be an arbitrary field, $f \in k[x,y]$ be an irreducible polynomial, $g \in k[x,y]$ be some other polynomial. If $g$ is not divisible by $f$ then the system of equations $f(x,y) = g(x,y) = 0$ has only a finite number of solutions.
+\end{lemma}
+
+\begin{customproof}
+	\
+
+	Consider the ideal $(f)$, and take $k[x,y]/(f)$. In this new ring, zeros of elements are when the function agrees with $f$. Then, since we know $g$ is not divisible by $f$, it cannot be $(f)$, so it cannot be identically zero, so it must only agree on finitely many points.
+\end{customproof}
+
+\begin{definition}[Algebraically Closed]
+	\
+
+	A field $k$ is algebraically closed if every nonconstant polynomial with one variable with coefficients in $k$ has a root in $k$. So, for all nonconstant $f \in k[x]$, $f(a) = 0$ for some $a \in k$.
+\end{definition}
+
+\begin{example}
+	\
+
+	$\mathbb{R}$ is not algebraically closed because $x^2 + 1 = 0$ has no valid solutions.
+\end{example}
+
+\begin{lemma}
+	\
+	A field $k$ being algebraically closed is equivalent to the following statements:
+
+	\begin{enumerate}
+		\item The only irreducible polynomials are those of degree one
+		\item Every polynomial is a product of first degree polynomials
+		\item Polynomials of prime degree have roots
+		\item The field has no proper algebraic extension
+		\item The field has no proper finite extension
+		\item For any two polynomials $f, g \in k[x]$, if $f,g$ are coprime, they do not share a common root.
+	\end{enumerate}
+\end{lemma}
+
+\section{Rational Curves}
+\
+
+\begin{example}
+\
+
+The curve $$y^2 = x^2 + x^3$$can be expressed via two rational functions of one parameter.
+\end{example}
+
+\begin{customproof}
+\
+
+Observe that any line of the form $y = tx$ has exactly one point of intersection with our curve, besides the origin. To show this, let's plug in: $$(tx)^2 = x^2 + x^3$$so$$x^2(t^2 - x - 1) = 0$$Our $x^2$ root corresponds to the intersection point at the origin, $(0,0)$. Then, we have $$t^2 - x - 1 = 0$$so$$x = t^2 - 1$$Then substituting back into our equation, we get that $$y = t(t^2-1)$$
+
+There is actually a $1$-$1$ association between points on the curve (besides $(0,0)$) and 
+\end{customproof}
+
+
+
+
+\end{document}

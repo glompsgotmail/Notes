@@ -1,0 +1,495 @@
+\documentclass{article}
+\usepackage{alexconfig}
+\usepackage{tikz-cd}
+\title{Category Theory in Context Chapter 2}
+
+\theme{olive}
+
+\begin{document}
+\maketitle
+
+\setcounter{section}{2}
+\subsection{Representable Functors}
+\
+
+\begin{remark}
+	\
+
+	The easiest way to formulate a universal property is to say some object is an initial or final object in some category. Unfortunately, such categories can often be very contrived, which makes it kinda hard to generate new UPs. In this section, we want to come up with a better way of creating such universal properties. But first, some examples:
+\end{remark}
+
+\begin{definition}[Discrete Dynamical Systems]
+	\
+
+	Let $X$ be a set, $x_0 \in X$, $f: X \to X$. The triple $(X, f, x_0)$ is called a \textbf{discrete dynamical system}, and allows us to see how $x_0$ changes when $f$ is repeatedly applied, by definining $$x_{n+1} = f(x_n)$$Morhpsisms between discrete dynamical systems are functions $a: X \to Y$ where $f(x_n) = y_n$ for all $n \in \mathbb{N}$.
+\end{definition}
+
+\begin{proposition}[The Universal Property of the Discrete Dynamical System]
+	\
+
+	Consider $(\mathbb{N}, \text{succ}, 0)$, where $\text{succ}$ is the successor function $$\text{succ}: n \mapsto n+1$$This is the \textbf{universal discrete dynamical system}, since for any other discrete dynamical system $(X, f, x_0)$, there is a unique discrete dynamical system morphsim $\varphi: \mathbb{N} \to X$ such that $\varphi(n) = x_n$, and so that the following diagram commutes:
+
+	\[\begin{tikzcd}
+			\mathbb{N} & \mathbb{N}\\
+			X & X
+			\arrow[from=1-1, to=1-2, "\text{succ}"]
+			\arrow[from=1-1, to=2-1, "\varphi"']
+			\arrow[from=1-2, to=2-2, "\varphi"]
+			\arrow[from=2-1, to=2-2, "f"']
+		\end{tikzcd}\]
+
+	And it is initial in the category of discrete dynamical systems.
+\end{proposition}
+
+\begin{theorem}[Initial and Terminal Objects as Representable Functors]
+	\
+
+	An object $c$ in a category $C$ is initial iff the functor $C(c, -): C \to \text{Set}$, which sends every object $c$ to the set of morphisms going out of $c$, is naturally isomorphic to the constant functor $*: C \to \text{Set}$ which sends every object to the singleton set (in other words, there is a unique morphism going out of $c$).
+
+	An object $c$ in a category $C$ is terminal iff the functor $C(-, c): C^\text{op} \to \text{Set}$ is naturally isomorphic to the constant functor $*: C^\text{op} \to \text{Set}$ which sends all $c$ to the singleton set.
+\end{theorem}
+
+\begin{customproof}
+	\
+
+	We do just the first part, the other one is dual.
+
+	If some object $c$ is initial, let $f: d \to e$ be a morphism between $d, e \in C$. then we want to verify the following diagram: \[\begin{tikzcd}
+			C(c,d) & \{*\}\\
+			C(c,e) & \{*\}
+			\arrow[from=1-1, to=1-2]
+			\arrow[from=1-1, to=2-1]
+			\arrow[from=2-1, to=2-2]
+			\arrow[from=1-2, to=2-2]
+		\end{tikzcd}\]
+
+	But since $C(c,d)$ and $C(c,e)$ are both singleton sets (on account of $c$ being initial), this is just four singleton sets in $\text{Set}$, which are all isomorphic to each other, and so this thing automatically commutes.
+\end{customproof}
+
+\begin{definition}[Representable Functors]
+	\
+
+	A functor $F: C \to \text{Set}$ is \textbf{representable} if it is naturally isomorphic to $\text{Hom}(c, -)$ for some $c \in C$. Then, we say $F$ is \textbf{represented by} $c$, and that the tuple $(c, F)$ is called a \textbf{representation}.
+
+	If a functor is contravariant, it is represented if $\text{Hom}(-, c)$ is naturally isomorphic.
+\end{definition}
+
+\begin{definition}[Presheaf]
+	\
+
+	A contravariant functor (functor which reverses the direction of morphisms) $F: C^\text{op} \to \text{Set}$ is called a \textbf{presheaf}. If $F$ is represented, then it is called a \textbf{representable presheaf}.
+\end{definition}
+
+\begin{definition}[Universal Properties]
+	\
+
+	A representable functor $F: C \to \text{Set}$ or $F': C^\text{op} \to \text{Set}$ encodes a \textbf{universal property} of the object it represents, in other words, if $c$ is the representing object, universal properties are statements about $\text{Hom}(c, -)$ or $\text{Hom}(-, c)$.
+\end{definition}
+
+\begin{example}
+	\
+
+	The identity functor $1_\text{Set}:\text{Set} \to \text{Set}$ is represented by the singleton set $\{*\}$. This is because \[ \begin{tikzcd}
+			\text{Set}(\{*\}, X) & X\\
+			\text{Set}(\{*\}, Y) & Y
+			\arrow[from=1-1, to=1-2, "\cong"]
+			\arrow[from=1-1, to=2-1, "f_*"]
+			\arrow[from=1-2, to=2-2, "f"]
+			\arrow[from=2-1, to=2-2, "\cong"]
+		\end{tikzcd}\]is indeed commutative. The hom-set $\text{Hom}(\{*\}, X) \cong X$ because for each element $x \in X$, there is one and exactly one morphism that send $* \mapsto x$.
+
+	And for any $f:X \to Y$, $f_*$ is literally defined as taking the function $\varphi: \{*\} \to X$ which picks $x$, and making it pick $f(x)$. Then, this diagram commutes.
+\end{example}
+
+\begin{proposition}
+\
+
+Let $U: \text{Group} \to \text{Set}$ be the forgetful functor. Show that $U$ is represented by $(\mathbb{Z}, +)$.
+\end{proposition}
+
+\begin{customproof}
+\
+
+We want to show that \[\begin{tikzcd}[column sep = huge, row sep = huge]
+	UG & \text{Group}(\mathbb{Z}, G)\\
+	UH & \text{Group}(\mathbb{Z}, H)
+	\arrow[from=1-1, to=1-2, "\cong"]
+	\arrow[from=1-1, to=2-1, "Uf"']
+	\arrow[from=2-1, to=2-2, "\cong"']
+	\arrow[from=1-2, to=2-2, "f_*"]
+\end{tikzcd}\]defines a natural isomorphism. For the components, we just choose a morphism that sends $g \in UG$ to $\varphi_g: 1 \mapsto g$. We can see that $\varphi$ is indeed a group hom. This map is injective, because for distinct $a, b \in UG$, we have that $\varphi_a(1) = a$ and $\varphi_b(1) = b$, so $\varphi_a \neq \varphi_b$. This map is surjective, because for every $\varphi: \mathbb{Z} \to G$, the morphism sends $\varphi(1) \to \varphi$. Since it is surjective and injective and we are in the category of Sets, this is an isomorphism.
+
+Now, start with some $g \in UG$. Going across, we get $\varphi_g: 1 \mapsto g$ a group hom. Then, postcomposing by $f$, we get $f \circ \varphi_g: 1 \mapsto f(g)$. Starting with $g \in UG$, going down will give us $f(g) \in UH$, and going across gives us $\psi: 1 \mapsto f(g)$. Since any morphism from $\mathbb{Z} \to X$ for any group $X$ is decided uniquely by where $1$ gets sent to (since $\mathbb{Z}$ is cyclic), we see that this is indeed commutative, and hence this defines a natural isomorphism.
+\end{customproof}
+
+\begin{proposition}
+\
+
+Let $U: \text{Mod}_R \to \text{Set}$ be the forgetful functor. Show that $U$ is represented by $R$ (as an $R$-module).
+\end{proposition}
+
+\begin{customproof}
+\
+
+We want to show that \[\begin{tikzcd}[column sep = huge, row sep = huge]
+	UM & \text{Group}(R, M)\\
+	UN & \text{Group}(R, N)
+	\arrow[from=1-1, to=1-2, "\cong"]
+	\arrow[from=1-1, to=2-1, "Uf"']
+	\arrow[from=2-1, to=2-2, "\cong"']
+	\arrow[from=1-2, to=2-2, "f_*"]
+\end{tikzcd}\]An $R$-module homomorphism just needs to map $0$ to $0$. We claim that there is a bijective association between elements of $M$ and morphisms $R \to M$ by sending $1 \in R$ to some $m \in M$. Basically, since $R$-module homomorphisms are $R$-linear, for any $r \in R$, $\varphi(r) = r \varphi(1) = rm$ decided entirely by where $1$ gets mapped to.
+
+And this is also natural for other reasons.
+\end{customproof}
+
+\begin{remark}
+\
+
+The representatives of forgetful functors seem to be free objects on a single generator. 
+\end{remark}
+
+\begin{example}
+\
+
+Any group presentation, like $$S^3 = \{s,t \mid s^2 = t^2 = 1, sts = tst\}$$is the representative of a functor $U: \text{Grp} \to \text{Set}$ such that $$\{(g_1, g_2) \in G^2 \mid g_1^2 = g_2^2 = 1, g_1g_2g_1 = g_2g_1g_2\}$$Since we associate every such set $UG$ with some morphism $S^3 \to G$ which just picks out $g_1$, $g_2$, and by group hom stuff, it must obey the relations and so it's isomorphic.
+\end{example}
+
+\subsection{The Yoneda Lemma}
+\
+
+\begin{lemma}[The Yoneda Lemma]
+\
+
+For any functor $F: C \to \text{Set}$, where $C$ is locally small, and for any object $c \in C$, there is a bijection $$\text{Hom}(C(c,-), F) \cong Fc$$that associates a natural transformation $\alpha: C(c, -) \to F$ to the element $\alpha_c(1_c) \in Fc$. Moreover, this correspondence is natural in both $c$ and $F$.  
+
+There are many ways we can send $\alpha: C(c,-) \to F$, and it turns out they are in correspondence with elements of $Fc$, because they are entirely decided by where to send $1_c$, the identity morphism of $c \in C$. 	
+\end{lemma}
+
+\begin{customproof}
+\
+
+\textbf{Proof of the Isomorphism:} So first, we want to show these two sets are isomorphic: $$\text{Hom}(C(c,-), f) \cong Fc$$and we do this by showing there is a function and an inverse function.
+
+Our forward mapping $$\Phi: \text{Hom}(C(c,-), F) \to Fc$$maps $$\alpha \mapsto \alpha_c(1_c) = u$$(you can check that $\alpha$ has a component $\alpha_c: C(c,c) \to Fc$ which does indeed take $1_c$ to some element called $u$).
+
+Our reverse mapping is $$\Psi: Fc \to \text{Hom}(C(c, -), F)$$It's kinda hard to state what the image of some $u \in Fc$ should be under the function $\Psi$, but as we will see, naturality forces only one such logical choice. 
+
+So we want to map into a natural transformation, lets call this $\Psi(u)$ with components $\Psi(u)_c$, $\Psi(u)_d$. Then, since $\Psi(u): C(c,-) \to F$ is a natural transformation, the following diagram must commute \[\begin{tikzcd}
+	C(c,c) & Fc\\
+	C(c,x) & Fx
+	\arrow[from=1-1, to=1-2, "\Psi(u)_c"]
+	\arrow[from=1-1, to=2-1, "f_*"']
+	\arrow[from=1-2, to=2-2, "Ff"]
+	\arrow[from=2-1, to=2-2, "\Psi(u)_d"']
+\end{tikzcd}\]needs to commute for any other object $x \in C$, any morphism $f: c \to x$.
+
+We know for sure there is at least one element in $C(c,c)$, that being $1_c$, so let's chase it around the diagram. Starting in the top left, and going down, we get $f \circ 1_c = f$, and going right, we get $\Psi(u)_d(f)$
+
+Okay, now if we start again and go right, we have $\Psi(u)_c(1_c)$ but if we want this to be an inverse of $\Phi$, we want $\Psi(u)_c(1_c) = u$. Then, going down we get $Ff(u)$. Then, commutativity of this diagram (since it's a natural transformation) forces us to define $$\Psi(u)_d(f) = Ff(u)$$
+
+Now we at least know where we want to send morphisms $f \in C(c,x)$, we want to show naturality for two unrelated objects, $C(c,d)$ and $C(c,e)$. 
+
+Let's chase this diagram and see if it commutes: \[\begin{tikzcd}
+	C(c,d) & Fd\\
+	C(c,e) & Fe
+	\arrow[from=1-1, to=1-2, "\Psi(u)_d"]
+	\arrow[from=1-1, to=2-1, "g_*"']
+	\arrow[from=2-1, to=2-2, "\Psi(u)_e"']
+	\arrow[from=1-2, to=2-2, "Fg"]
+\end{tikzcd}\]For some $f \in C(c,d)$, going down we get $g\circ f$, and going across we get $\Psi(u)_e(gf) = F(g\circ f)(u)$. Instead, going right we get $\Psi(u)_d(f) = Ff(u)$ and then going down we get $Fg \circ Ff(u)$, but by functors, we know that $Fg \circ Ff = F(g \circ f)$, so we have that $F(g \circ f)(u) = F(g \circ f)(u)$, which is indeed true.
+
+So indeed, our function $\Psi: Fc \to \text{Hom}(C(c, -), F)$ where $$u \mapsto \Psi(x)_d(f) = Ff(u)$$maps elements to natural transformations between $C(c,-)$ and $F$. 
+
+Now, lets make sure they are inverses of each other. $\Phi \circ \Psi(u) = \Psi(u)_c(1_c)$ but by definition, this must send $1_c \to u$. so $\Phi \circ \Psi(u) = u$ so they are indeed inverses of each other. 
+
+We also want to show that for some $\alpha: C(c, -) \to F$, we have $\Psi \circ \Phi(\alpha) = \Psi(\alpha_c(1_c)) = \alpha$. Consider \[\begin{tikzcd}
+	C(c,c) & Fc\\
+	C(c,d) & Fd
+	\arrow[from=1-1, to=1-2, "\alpha_c"]
+	\arrow[from=1-1, to=2-1, "f_*"']
+	\arrow[from=1-2, to=2-2, "Ff"]
+	\arrow[from=2-1, to=2-2, "\alpha_d"']
+\end{tikzcd}\]commutes. Picking $1_c$ to start, we get that $$\alpha_d(f) = Ff(\alpha_c(1_c))$$But then, for the natural transformation $\Psi(\alpha_c(1_c))$, we defined $$\Psi(\alpha_c(1_c))_d(f) = Ff(\alpha_c(1_c))$$So we get that $$\Psi(\alpha_c(1_c))_d = \alpha_d$$for any $d \in C$. Since they have equal components, they are equal natural transformations.
+
+Then, we see that $\Phi$ and $\Psi$ are inverses of each other.
+
+\textbf{Proof of Naturality:}
+
+When we say it is natural in the functor $F$, we mean that given another natural transformation $\beta: F \to G$, the following diagram commutes: \[\begin{tikzcd}
+	\text{Hom}(C(c,-), F) & Fc\\
+	\text{Hom}(C(c,-), G) & Gc
+	\arrow[from=1-1, to=2-1, "\beta_*"']
+	\arrow[from=1-1, to=1-2, "\Phi_F"]
+	\arrow[from=2-1, to=2-2, "\Phi_G"']
+	\arrow[from=1-2, to=2-2, "\beta_c"]
+\end{tikzcd}\]Well, what is there to do except pick a natural transformation $\alpha \in \text{Hom}(C(c,-), F)$? Going down, we get $\beta \circ \alpha: C(c,-) \to G$, and going across, we get $(\beta \circ \alpha)_c(1_c) = \beta_c \circ \alpha_c(1_c)$ (by definition of the vertical composition of natural transformations).
+
+Starting back at the top and going across, we have some $\alpha_c(1_c) \in Fc$, and going down, we have $\beta_c(\alpha_c(1_c))$. Since $\beta_c(\alpha_c(1_c)) = \beta_c \circ \alpha_c(1_c)$, this diagram does indeed commute, and it is indeed natural in the functor. 
+
+When we say it is natural in the object, that means given some $f: c \to d$, the following diagram commutes: \[\begin{tikzcd}
+	\text{Hom}(C(c,-), F) & Fc\\
+	\text{Hom}(C(d,-), F) & Fd
+	\arrow[from=1-1, to=2-1, "(f^*)^*"']
+	\arrow[from=1-1, to=1-2, "\Phi_c"]
+	\arrow[from=2-1, to=2-2, "\Phi_d"']
+	\arrow[from=1-2, to=2-2, "Ff"]
+\end{tikzcd}\]So the precompose functor $f^*: C(d,-) \to C(c,-)$ takes some morphism $g: d \to x$ and returns $g \circ f: c \to x$. The precompose natural transformation $(f^*)^*$ takes some natural transformation $\alpha: C(c,-) \to F$, and for each component $\alpha_x: C(c,x) \to Fx$, precomposes $f^*$ to get $\alpha_x \circ f^*: C(d,x) \to Fx$. 
+
+Okay let's start diagram chasing. Starting with $\alpha$ in the upper left, going down we get a natural transformation whose components are $(\alpha \circ f^*)_d$ and the map $\Phi_d$ just evaluates at $1_d$ to get $(\alpha \circ f^*)_d(1_d) = \alpha_d \circ f^*_d (1_d)$. But $f^*_d(1_d) = f$, so we get $$\alpha_d \circ f^*_d = \alpha_d(f)$$
+
+Going across first, we get $\alpha_c(1_c)$, and going down, we get $Ff \circ \alpha_c(1_c)$.
+
+But by definition of $\alpha$, we know that $$\alpha_d(f) = Ff\circ \alpha_c(1_c)$$hence this diagram does commute, and we are indeed natural in the object. \qed
+\end{customproof}
+
+\begin{corollary}[Yoneda Embedding]
+\
+
+The covariant functor \[\begin{tikzcd}[column sep=large]
+	C & \text{Set}^{C^\text{op}}\\
+	c & C(-,c)\\
+	\\
+	d & C(-,d)
+	\arrow[from=1-1, to=1-2, hook, "\yo"]
+	\arrow[from=2-1, to=2-2, mapsto, shorten=8]
+	\arrow[from=2-1, to=4-1, "f"'{name=F}, shorten=2]
+	\arrow[from=2-2, to=4-2, "f_*"{name=G}]
+	\arrow[from=F, to=G, mapsto, shorten=16]
+	\arrow[from=4-1, to=4-2, mapsto, shorten=6]
+\end{tikzcd}\]and the contravariant functor \[\begin{tikzcd}[column sep=large]
+	C^\text{op} & \text{Set}^C\\
+	c & C(c,-)\\
+	\\
+	d & C(d,-)
+	\arrow[from=1-1, to=1-2, hook, "\yo"]
+	\arrow[from=2-1, to=2-2, mapsto, shorten=8]
+	\arrow[from=2-1, to=4-1, "f"'{name=F}, shorten=2]
+	\arrow[from=4-2, to=2-2, "f^*"{name=G}]
+	\arrow[from=F, to=G, mapsto, shorten=16]
+	\arrow[from=4-1, to=4-2, mapsto, shorten=6]
+\end{tikzcd}\]are both full and faithful.
+\end{corollary}
+
+\begin{customproof}
+\
+
+These two statements are duals of each other, so we will prove it for the contravariant version.
+
+To show a functor is full and faithful, we want to show that for any $c, d \in C^\text{op}$, $$C^\text{op}(c,d) \cong \text{Hom}(C(d,-), C(c,-))$$but doesn't this statement suspiciously look like the Yoneda lemma? Indeed, the Yoneda lemma asserts that for any $c, d \in C$, $$\text{Hom(C(d,-), C(c,-))} \cong C(d,c)$$but we know that $$C(d,c) \cong C^\text{op}(c,d)$$so $$\text{Hom}(C(d,-), C(c,-))\cong C(d,c) \cong C^\text{op}(c,d) $$
+\end{customproof}
+
+\begin{corollary}
+\
+
+Every row operation in matrices with $n$ rows is defined by left multiplication by some $n \times n$ matrix, namely by performing row operations on the identity matrix.
+\end{corollary}
+
+\begin{customproof}
+\
+
+We will work in the category of $\text{Mat}_R$, where the objects are natural numbers, and morphisms $M: a\to b$ define $b \times a$ matrices. Then, the functor $$\text{Hom}(-, n): \text{Mat}_R \to \text{Set}^{\text{Mat}_R^\text{op}}$$selects for all $R$-valued matrices with $n$ rows, sending some integer in $\text{Mat}_R$ to the set of all $n \times a$ matrices, and row operations are natural endomorphisms $\alpha: \text{Hom}(-,n) \to \text{Hom}(-,n)$. To check that they are indeed natural consider \[\begin{tikzcd}
+	\text{Mat}_R(a, n) & \text{Mat}_R(a, n)\\
+	\text{Mat}_R(b, n) & \text{Mat}_R(b, n)
+	\arrow[from=1-1, to=1-2, "\alpha_a"]
+	\arrow[from=1-1, to=2-1, "f^*"']
+	\arrow[from=2-1, to=2-2, "\alpha_b"']
+	\arrow[from=1-2, to=2-2, "f^*"]
+\end{tikzcd}\]where $f: b \to a$ is some other $a \times b$ matrix. But $\alpha_a$, $\alpha_b$ are row operations, and hence linear, so almost by definition, if $M \in \text{Mat}_R(a,n)$, we have $$\alpha_a(M) \circ f = \alpha_b(M \circ f)$$Then, we want to recognize that this is a covariant Yoneda embedding, meaning the natural transformation $$\alpha: \text{Mat}_R(-,n) \to \text{Mat}_R(-,n)$$ associates with a mapping $f: n \to n$, which is just an $n \times n$ matrix. 
+
+Finally, the Yoneda lemma tells us that $\alpha$ is associated with $\alpha_n(1_n)$ which is akin to applying the same row operations to the identity matrix, and this matches up with what we learned from linear algebra.
+\end{customproof}
+
+\begin{corollary}[Cayley's Theorem]
+\
+
+Any group is isomorphic to a subgroup of a permutation group.
+\end{corollary}
+
+\begin{customproof}
+\
+
+Every $G$ can be thought of as a one object category $BG$, where elements are automorphisms of the single object. Then, consider the Yoneda functor: \[\begin{tikzcd}[column sep=large]
+	BG & \text{Set}^{BG^\text{op}}\\
+	G & BG(G,G)\\
+	\\
+	G & BG(G,G)
+	\arrow[from=1-1, to=1-2, hook, "\yo"]
+	\arrow[from=2-1, to=2-2, mapsto, shorten=8]
+	\arrow[from=2-1, to=4-1, "g"'{name=F}, shorten=2]
+	\arrow[from=2-2, to=4-2, "g_*"{name=G}]
+	\arrow[from=F, to=G, mapsto, shorten=16]
+	\arrow[from=4-1, to=4-2, mapsto, shorten=6]
+\end{tikzcd}\]where $BG(G,G)$ is a set that can be acted upon by $g$, or a $G$-Set. (This makes sense as a group $G$ is also a $G$-set). Since $\yo$ is full and faithful, isomorphisms map to isomorphisms, and so all endomorphisms of $BG(G,G)$ are automorphisms. 
+
+Now, consider the forgetful functor $U: \text{Set}^{BG^\text{op}} \to \text{Set}$. The automorphisms on $U(BG(G,G))$ form a permutation group, and since $U$ is faithful, $U(BG(G,G))$ takes automorphisms on $BG(G,G)$ and maps them to a subgroup of the automorphisms of $U(BG(G,G))$. Hence, any group is isomorphic to the subgroup of a permutation group.
+\end{customproof}
+
+\subsection{Universal Properties and Universal Elements}
+\
+
+\begin{definition}[Representably Isomorphic]
+\
+
+Two objects $x, y \in C$ are \textbf{representably isomorphic} if $x \cong y$ and $C(x, -) \cong C(y, -)$, and $C(-, x) \cong C(-,y)$. 
+\end{definition}
+
+\begin{corollary}
+\
+
+In a locally small category $C$, if $x, y \in C$ and $x \cong y$, then $x$ and $y$ are representably isomorphic.
+\end{corollary}
+
+\begin{customproof}
+\
+
+Since the Yoneda embedding is full and faithful, it preseves isomorphisms, so any isomorphism $f: x \to y$ will also be an isomorphism $\yo f: C(-,x) \to C(-,y)$ and $\yo f: C(y,-) \to C(x,-)$.
+\end{customproof}
+
+\begin{corollary}
+\
+
+If two functors are represented by the same object, they are naturally isomorphic.
+\end{corollary}
+
+\begin{customproof}
+\
+
+If two functors are represented by the same object $x$, $x$ is isomorphic to itself, so $x$ is representably isomorphic to itself. But being representably isomorphic exactly means that all of the functors you represent are naturally isomorphic. 
+\end{customproof}
+
+\begin{proposition}
+\
+
+Consider a pair of objects $x,y \in C$, $C$ locally small. 
+
+\begin{enumerate}
+	\item If either the covariant or contravariant functors represented by $x$ and $y$ are naturally isomorphic, then $x$ and $y$ are isomorphic
+	\item If $x$ and $y$ represent the same functor, then $x$ and $y$ are isomorphic.
+\end{enumerate}
+\end{proposition}
+
+\begin{customproof}
+\
+
+The Yoneda embedding works both ways: if two representable functors are isomorphic, since $\yo$ is full and faithful, their preimages, which are their representatives, must be isomorphic too. Since a functor is isomorphic to itself, $2$ follows.
+\end{customproof}
+
+\begin{definition}[Contractible Groupoid]
+\
+
+A \textbf{contractible groupod} is a category with a unique isomorphism in each homset. 
+\end{definition}
+
+\begin{corollary}
+\
+
+The full subcategory of $C$ spanned by its terminal objects is either empty or is a contractible groupoid. In particular, any two terminal objects in $C$ are uniquely isomorphic.
+\end{corollary}
+
+\begin{customproof}
+\
+
+A category "spanned by objects" is just the smallest category containing those objects. 
+
+Let $t, t' \in C$ be two terminal objects, consider $\text{Hom}(C(-,t), C(-,t')) \cong C(t,t')$ (since $C(-,t')$ is represented by $t'$). But, $C(t,t')$ has only one element (there is a single morphism between any two terminal objects), hence there is only one natural transformation between $\text{Hom}(C(-,t), C(-,t'))$, the identity natural transformation, and so these two objects are isomorphic, and so are $t$ and $t'$.
+\end{customproof}
+
+\begin{definition}[Universal Properties]
+\
+
+A \textbf{universal property} of an object $c \in C$ is expressed by a representable functor $F$ together with a \textbf{universal element} $x \in Fc$ that defines a natural isomorphism $C(c,-) \cong F$ or $C(-,c) \cong F$ as appropriate, via the Yoneda lemma.  
+\end{definition}
+
+\begin{remark}
+\
+
+We know that $\text{Hom}(C(c,-), F) \cong Fc$, but most of the natural transformations $\alpha^x \in \text{Hom}(C(c,-), F)$ are just that: natural transformations. The "universal element" $x$ is the element (if any) such that $\alpha^x$ defines a natural isomorphism.
+\end{remark}
+
+\begin{proposition}
+\
+
+The forgetful functor on rings, $U: \text{Ring} \to \text{Set}$ is represented by $\mathbb{Z}[x]$. Show that the universal element is $x$.
+\end{proposition}
+
+\begin{customproof}
+\
+
+We first want to construct the Yoneda diagram and see what natural transformation $x$ corresponds to. Let $\phi: \mathbb{Z}[x] \to R$. \[\begin{tikzcd}
+	\text{Ring}(\mathbb{Z}[x], \mathbb{Z}[x]) & U \mathbb{Z}[x]\\
+	\text{Ring}(\mathbb{Z}[x], R) & UR
+	\arrow[from=1-1, to=1-2, "\alpha^x_{\mathbb{Z}[x]}"]
+	\arrow[from=1-1, to=2-1, "\phi_*"']
+	\arrow[from=2-1, to=2-2, "\alpha^x_R"']
+	\arrow[from=1-2, to=2-2, "U\phi"]
+\end{tikzcd}\]And by commutativity, we get $$\alpha^x_R(\phi) = U(\phi(x))$$or in other words, it maps $\phi: \mathbb{Z}[x] \to R$ to it's value at $x$. 
+
+For any ring $R$, $$\alpha_R^x: \text{Ring}(\mathbb{Z}[x], R)$$ $$\alpha_R^x: \varphi \mapsto \varphi(x)$$ is indeed a function. Now we want to define an inverse:
+
+Let $\alpha_R': r \mapsto \psi$ where $\psi: \mathbb{Z}[x] \to R$ is a morphism where $\psi(x) = r$. For this to be a well defined function, there needs to be only one morphism $\psi$ where $\psi(x) = r$. For any $a \in \mathbb{Z}[x]$, $$a = \sum_{i=1}^n a_n x^n$$where $a_n \in \mathbb{Z}$. Then, $$\psi(a) = \sum_{i=1}^n \psi(a_n)\psi(x)^n$$by ring homs. But for any $a_n \in \mathbb{Z}$, $a_n = 1 + \dots + 1$ ($a_n$ times), and since $\psi$ is a ring hom, and so must map units to units, $\psi(a_n) = \psi(1) + \dots + \psi(1)$ ($a_n$ times), so where to map all other ring elements is already decided for us. Hence, there is only one ring hom where $\psi(x) = r$, and $\alpha_R'$ is well defined. 
+
+Now, let's check that they are inverses of each other: $$\alpha^x_R \circ \alpha_R' (r) = \psi(x) = r$$so they are indeed inverses.
+\end{customproof}
+
+\begin{definition}[Free/Transitive $G$-Sets]
+\
+
+A $G$-set $E$ is \textbf{free} if the stabilizer of every $e \in E$ is trivial. 
+
+A $G$-set $E$ is \textbf{transitive} if the orbit of every element $e \in E$ is the whole set. 
+\end{definition}
+
+\begin{proposition}
+\
+
+Let $E: BG \to \text{Set}$ be a functor, note that the functor $E$ can also be thought of as a $G$-set with endomorphisms $Eg$ for endomorphisms $g$ of $BG$. Then, the following are equivalent:
+
+\begin{enumerate}
+	\item $E$ is a representable functor
+	\item $E \cong G$ as a $G$-set
+	\item The action of $G$ on $E$ is free and transitive. 
+\end{enumerate}
+\end{proposition}
+
+\begin{customproof}
+\
+
+$(2) \iff (3)$ By the orbit stabilizer theorem, if an action is free and transitive, then $G \cong E$ as sets, so $G \cong E$ as $G$-sets. 
+
+$(1) \iff (2)$ If $E$ is representable, then $E \cong \text{Hom}_{BG}(*,*)$. However, note that the endomorphisms of $*$ is exactly the group $G$, hence $E \cong G$. 
+
+Likewise, if $E \cong G$, then $E \cong \text{Hom}(*,*)$ so $E$ representable.
+\end{customproof}
+
+\begin{proposition}
+\
+
+If $E: BG \to \text{Set}$ with $E \cong G$ as $G$-sets, then any $e \in E$ makes $$\text{Hom}(*,*) \cong G \cong E$$a natural isomorphism, and hence any $e \in E$ is the universal element for the functor $E$.
+\end{proposition}
+
+\begin{definition}[Torsor]
+\
+
+A representable $G$-set is called a \textbf{$G$-torsor}. 
+\end{definition}
+
+\begin{remark}
+\
+
+We can think of a torsor (a representable $G$-set) as a group that has "forgotten its identity element".
+
+From the viewpoint of $E$, there is no distinguished identity element. Only by picking some universal element $e \in E$ does the Yoneda lemma induce an identity on $E$. 
+
+In other words, there is an identity morphism $1_\text{BG} \in BG$, but there are $\vert E \vert$ many ways to make an isomorphism into $E$. 
+\end{remark}
+
+\begin{example}
+\
+
+A torsor of the group $(\mathbb{R}^n, +)$ is an \textbf{affine space}. Compared to the vector space $\mathbb{R}^n$ which has an origin (additive identity), an affine space doesn't!
+
+$\mathbb{R}^n$ acts on $\mathbb{A}^n$ by shifting points along the vector, and you can check that this is indeed free and transitive. No points are ever fixed (except by the zero vector), and it is possible to move some point into every other point by just shifting it by the vector that points from one point to the other. 
+\end{example}
+
+\end{document}

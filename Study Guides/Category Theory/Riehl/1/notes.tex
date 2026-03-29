@@ -1,0 +1,1323 @@
+\documentclass{article}
+
+\usepackage{alexconfig}
+\usepackage{tikz-cd}
+\usepackage{bbm}
+
+\title{Category Theory in Context Chapter 1}
+
+\begin{document}
+\maketitle
+
+\setcounter{section}{1}
+\setcounter{subsection}{3}
+\subsection{Natural Transformations}
+\
+
+\begin{definition}[Linear Dual Space]
+\
+
+The \textbf{linear dual space} to a $\Bbbk$-vector space is the space of all linear maps $V^* = \text{Hom}(V, \Bbbk)$, since these vector spaces have the same dimension.
+
+More prescisely, if our vector space $V$ has basis vectors $e^i$, then our dual vector space has basis linear maps $e_*^j = \begin{cases}
+    1 & i = j \\ 0 & i \neq j
+\end{cases}$ which evaluate basis vectors. Then, if we have, say $a = 3e_1 + 2e_2 \in V$, then by linearity, $e^1_*(a) = e^1_*(3e^1) = 3e^1_*(e^1) = 3$ and $e^2_*(a) = e^2_*(2e^2) = 2e^2_*(e^2) = 2$.
+\end{definition}
+
+\begin{definition}[Double Dual Space]
+\
+
+Given a vector space $V$, the \textbf{double dual} vector space $V^{**}$ is isomorphic to $V$. Elements of the double dual are evaluations of the functions in $V^*$. So, for every $v \in V$, there is an element $\text{ev}_v: V^* \to \Bbbk$ which takes some linear function $f \in V^*$ and returns $f(v) \in \Bbbk$
+\end{definition}
+
+\begin{definition}[Natural Transformation]
+\
+
+Let $C,D$ be categories, $F,G: C \to D$ be functors. A \textbf{natural transformation} $a: F \to G$ is a mapping between functors such that for each object $c \in C$, there is an arrow $a_c: Fc \to Gc$ in $D$, the arrows are called \textbf{components}, and for any morphism $f: c \to c'$ in $C$, the following four morphisms commute: 
+
+\begin{enumerate}
+    \item $Ff: Fc \to Fc'$
+    \item $a_c: Fc \to Gc$
+    \item $Gf: Gc \to Gc'$
+    \item $a_{c'}: Fc' \to Gc'$
+\end{enumerate}
+
+\[\begin{tikzcd}
+	Fc && Gc \\
+	\\
+	{Fc'} && {Gc'}
+	\arrow["{a_c}", from=1-1, to=1-3]
+	\arrow["Ff"', from=1-1, to=3-1]
+	\arrow["Gf", from=1-3, to=3-3]
+	\arrow["{a_{c'}}"', from=3-1, to=3-3]
+\end{tikzcd}\]
+
+A \textbf{natural isomorphism} is one where every component $a_c: Fc \to Gc$ is an isomorphism.  
+\end{definition}
+
+\begin{remark}
+\
+
+We may sometimes say "the arrows $X$ are natural" meaning the arrows in $X$ are the components of a natural transformation between two functors. Which functors? You'll have to figure that one out yourself bub.
+\end{remark}
+
+\begin{example}
+\
+
+A map $\text{ev}: V \to V^{**}$ defines the components of a natural isomorphism mapping between the identity endofunctor (the functor on $\text{Vect}_\Bbbk$ which sends everything to itself) and the double dual functor (the functor which sends everything to it's double dual). Let's check if this square commutes!
+
+\[\begin{tikzcd}
+	V && V^{**} \\
+	\\
+	{W} && {W^{**}}
+	\arrow["{\text{ev}_V}", from=1-1, to=1-3]
+	\arrow["{\varphi}"', from=1-1, to=3-1]
+	\arrow["{\varphi^{**}}", from=1-3, to=3-3]
+	\arrow["{\text{ev}_W}"', from=3-1, to=3-3]
+\end{tikzcd}\]
+
+Picking some vector $v \in V$, $\text{ev}_{\varphi(v)}$ takes a functional on $W$ (a vector in $W^*$) and maps it to it's evaluation in $\Bbbk$ at $\varphi(v)$, $f(\varphi(v))$. But by definition of the dual functor (and ik its not in the notes sorry I skipped when we covered this) $\varphi^{**}(\text{ev}_v)$ takes some functional $f \in V^*$ and maps it to $f\varphi: W \to \Bbbk$, $f\varphi \in W^*$, and we have that $$f(\varphi(v)) = f\varphi(v)$$which is true I guess.
+\end{example}
+
+\begin{example}
+\
+
+There isn't a natural isomorphism between the identity functor on vector spaces and it's dual! This is because (for one of many reasons), the identity functor is covariant, meaning it keeps the domain and codomain of morphisms, whereas the dual space functor is contravariant, meaning it swaps the domain and codomain of morphisms.
+
+Think of how given a smooth map $f: M \to N$, the pushforward, $f_*: TM \to TN$, while the pullback maps $f^*: T^*N \to T^*M$. 
+\end{example}
+
+\begin{exercise}
+\
+
+Let $1_\text{Set}$ be the identity functor on the category of sets, and let $P$, the power set functor, map a set to it's power set. Then, there exists a natural transformation $\eta: 1_\text{Set} \to P$, whose components are mappings $\eta_A: A \to \mathcal{P}(A)$ which carry $a \in A$ to $\{a \} \in \mathcal{P}(A)$. Let's check if the diagram commutes!
+
+\[\begin{tikzcd}
+	A && \mathcal{P}(A) \\
+	\\
+	{B} && {\mathcal{P}(B)}
+	\arrow["{\eta_A}", from=1-1, to=1-3]
+	\arrow["{f}"', from=1-1, to=3-1]
+	\arrow["{Pf}", from=1-3, to=3-3]
+	\arrow["{\eta_B}"', from=3-1, to=3-3]
+\end{tikzcd}\]
+
+For any $a \in A$, going down takes us to $f(a)$, and then right takes us to $\{f(a)\}$. If we first go right, it takes us to $\{a\}$. The mapping $Pf$ is defined as taking some $\{a_1, a_2 \dots \} \in \mathcal{P}(A)$ to $\{f(a_1), f(a_2) ,\dots \} \in \mathcal{P}(B)$ and as we can see, going down takes us to $\{f(a)\}$ hence this diagram commutes and is indeed a natural transformation. 
+\end{exercise}
+
+\begin{proposition}
+\
+
+Let $A$ be a finitely generated abelian group, $TA$ be the \textbf{torsion subgroup} of $A$, the subgroup of all finitely generated elements of $A$. Then, $A = TA \oplus \frac{A}{TA}$, but show these isomorphisms do not define the components of a natural transformation.
+\end{proposition}
+
+\begin{customproof}
+\
+
+We want to show that if the map between functors $\alpha: \text{id}_{\text{Ab}_\text{fg}} \to F$, where $F$ is the functor that maps an abelian group $A$ to $TA \oplus \frac{A}{TA}$ was natural, then something goes wrong. First, we want to show the natural transformation decomposes into:
+
+\[\begin{tikzcd}
+	A && \frac{A}{TA} && TA \oplus \frac{A}{TA} && A \\
+    \\
+    B && \frac{B}{TB} && TB \oplus \frac{B}{TB} && B
+    \arrow[two heads, from=1-1, to=1-3, "\varphi_A"]
+    \arrow[hook, from=1-3, to=1-5, "\psi_A"]
+    \arrow[hook, two heads, from=1-5, to=1-7, "\eta_A"]
+    \arrow[two heads, from=3-1, to=3-3, "\varphi_B"]
+    \arrow[hook, from=3-3, to=3-5, "\psi_B"]
+    \arrow[hook, two heads, from=3-5, to=3-7, "\eta_B"]
+    \arrow[from=1-1, to=3-1, "f"']
+    \arrow[from=1-3, to=3-3, "\bar{f}"']
+    \arrow[from=1-5, to=3-5, "\hat{f}"']
+    \arrow[from=1-7, to=3-7, "f"']
+\end{tikzcd}\]
+
+To do this, we want to check the naturality of each square. First: 
+\[\begin{tikzcd}
+	A && \frac{A}{TA} \\
+    \\
+    B && \frac{B}{TB}
+    \arrow[two heads, from=1-1, to=1-3, "\varphi_A"]
+    \arrow[two heads, from=3-1, to=3-3, "\varphi_B"]
+    \arrow[from=1-1, to=3-1, "f"']
+    \arrow[from=1-3, to=3-3, "\bar{f}"']
+\end{tikzcd}\]
+
+Let $a \in A$, then going down, we get $f(a)$, and going right, we get the coset $f(a)TB$. Start again at $a$, now go right, we get $aTA$, and going down, we get $\bar{f}(aTA) = f(a)f(TA)$. But every $t \in TA$ has finite order, and since $\bar{f}$ is a group homomorphism, $\vert \bar{f}(t) \vert = \vert t \vert$, hence $f(TA) = TB$, so we get $\bar{f}(aTA) = f(a)TB$ so this commutes, so this is natural.
+
+Next:
+
+\[\begin{tikzcd}
+	 \frac{A}{TA} && TA \oplus \frac{A}{TA} \\
+    \\
+    \frac{B}{TB} && TB \oplus \frac{B}{TB}
+    \arrow[hook, from=1-1, to=1-3, "\psi_A"]
+    \arrow[hook, from=3-1, to=3-3, "\psi_B"]
+    \arrow[from=1-1, to=3-1, "\bar{f}"']
+    \arrow[from=1-3, to=3-3, "\hat{f}"']
+\end{tikzcd}\]
+
+Starting with some $aTA$, and going across, we get $(e_A, aTA)$, and going down, $\hat{f}$ acts with $f$ on the first item, and with $\bar{f}$ on the second item, so we get $(e_B, f(a)TB)$.
+
+Starting with some $aTA$, and going down, we get $f(a)TB$. Then, going across, we get $(e_b, f(a)TB)$, hence the diagram commutes, so this is natural.
+
+Lastly, we know that each $\eta_G$ is an isomorphism, so this diagram should commute.
+
+So, if this transformation was natural, it decomposes as above. However, try plugging in $\mathbb{Z}$ for $A$ and $\frac{\mathbb{Z}}{2 \mathbb{Z}}$ for $B$. We get: 
+
+\[\begin{tikzcd}
+	\mathbb{Z} && \frac{\mathbb{Z}}{T \mathbb{Z}} && T\mathbb{Z} \oplus \frac{\mathbb{Z}}{T \mathbb{Z}} && \mathbb{Z} \\
+    \\
+    \frac{\mathbb{Z}}{2 \mathbb{Z}} && \frac{\frac{\mathbb{Z}}{2 \mathbb{Z}}}{T \frac{\mathbb{Z}}{2 \mathbb{Z}}} && T\frac{\mathbb{Z}}{2 \mathbb{Z}} \oplus \frac{\frac{\mathbb{Z}}{2 \mathbb{Z}}}{T\frac{\mathbb{Z}}{2 \mathbb{Z}}} && \frac{\mathbb{Z}}{2 \mathbb{Z}}
+    \arrow[two heads, from=1-1, to=1-3, "\varphi_A"]
+    \arrow[hook, from=1-3, to=1-5, "\psi_A"]
+    \arrow[hook, two heads, from=1-5, to=1-7, "\eta_A"]
+    \arrow[two heads, from=3-1, to=3-3, "\varphi_B"]
+    \arrow[hook, from=3-3, to=3-5, "\psi_B"]
+    \arrow[hook, two heads, from=3-5, to=3-7, "\eta_B"]
+    \arrow[from=1-1, to=3-1, "f"']
+    \arrow[from=1-3, to=3-3, "\bar{f}"']
+    \arrow[from=1-5, to=3-5, "\hat{f}"']
+    \arrow[from=1-7, to=3-7, "f"']
+\end{tikzcd}\]
+
+But since $\frac{\mathbb{Z}}{2 \mathbb{Z}}$ has only finite order elements, and $\mathbb{Z}$ has no nontrivial finite order elements, we get: 
+
+\[\begin{tikzcd}
+	\mathbb{Z} && \mathbb{Z} && \mathbb{Z} && \mathbb{Z} \\
+    \\
+    \frac{\mathbb{Z}}{2 \mathbb{Z}} && 0 && \frac{\mathbb{Z}}{2 \mathbb{Z}} && \frac{\mathbb{Z}}{2 \mathbb{Z}}
+    \arrow[two heads, from=1-1, to=1-3, "\varphi_A"]
+    \arrow[hook, from=1-3, to=1-5, "\psi_A"]
+    \arrow[hook, two heads, from=1-5, to=1-7, "\eta_A"]
+    \arrow[two heads, from=3-1, to=3-3, "\varphi_B"]
+    \arrow[hook, from=3-3, to=3-5, "\psi_B"]
+    \arrow[hook, two heads, from=3-5, to=3-7, "\eta_B"]
+    \arrow[from=1-1, to=3-1, "f"']
+    \arrow[from=1-3, to=3-3, "\bar{f}"']
+    \arrow[from=1-5, to=3-5, "\hat{f}"']
+    \arrow[from=1-7, to=3-7, "f"']
+\end{tikzcd}\]
+
+The top chain of morphisms corresponds to adding some integer $c$ to all $z \in \mathbb{Z}$ (these are the only automorphisms on $\mathbb{Z}$). However, we see that on the bottom, everything gets squished to $0$ by $\varphi$, and so it maps everything to the identity. Hence, this diagram is not commutative, so this transformation cannot be natural.
+\end{customproof}
+
+\begin{example}
+\
+
+Let $C$ be a locally small category, $f: w \to x$, $h: y \to z$. Consider the functors $C(-, y)$ and $C(-,z)$, which carry any object $a \in C$ to the homset $C(a,y)$ and $C(a,z)$ respectively, and morphisms $f: w \to x$ to a pullback function $f^*: C(x,y) \to C(w,y)$ which takes any $g \in C(x,y)$ and returns $f^*(g) = g \circ f: w \to y$, now making it a member of $C(w,y)$. This functor is contravariant.
+
+Now, the set of pushforwards $h_*$ define a natural transformation on $C(-,y)$ and $C(-,z)$, such that the diagram commutes:
+
+\[\begin{tikzcd}
+	C(x,y) && C(x,z) \\
+    \\
+    C(w,y) && TB \oplus C(w,z)
+    \arrow[, from=1-1, to=1-3, "h_*"]
+    \arrow[hook, from=3-1, to=3-3, "h_*"]
+    \arrow[from=1-1, to=3-1, "f^*"']
+    \arrow[from=1-3, to=3-3, "f^*"']
+\end{tikzcd}\]
+
+Start with some $g: x \to y \in C(x,y)$. Then, going across, we get $h_*(g) = hg$, and $f^*(hg) = hgf$ which does indeed map from $w$ to $z$.
+
+Starting again with $g \in C(x,y)$, we go down, $f^*(g) = gf$ and going across, we get $h_*(gf) = hgf$ and so this diagram commutes.
+
+Additionally, if we rotate this diagram, thinking of each $h_*$ as a functor, and each $f^*$ as a transformation, this is natural as well.
+\end{example}
+\begin{exercise}[The Categorification of the Natural Numbers]
+\
+
+Let $A,B$ be sets, let $A \times B$ be the cartesian product, $A + B$ be the disjoint union, $A^B$ be the set of functions $f:B \to A$. Then, the following isomorphisms are natural:
+
+\begin{enumerate}
+    \item $A \times (B + C) \cong (A \times B) + (A \times C)$
+    \item $(A \times B)^C \cong A^C \times B^C$
+    \item $A^{B+C} \cong A^B \times A^C$
+    \item $(A^B)^C \cong A^{B \times C}$
+\end{enumerate}
+\end{exercise}
+
+\begin{solution}
+\
+
+Solving all of these problems takes the same general shape. We first want to determine what our functors are and how they transform objects and morphisms, then we want to verify naturality, and finally, we want to find inverses to our components. This is sufficient to show natural isomorphisms.
+
+\begin{enumerate}
+    \item Our two functors are $F: \text{Set} \times \text{Set} \times \text{Set} \to \text{Set}$ which maps objects $(A,B,C) \mapsto A \times (B+C)$ and morphisms $$(f_A, f_B, f_C): (A,B,C) \to (A', B', C')$$ to $$Ff: (a, (b, 0)) \mapsto (f_A(a), (f_B(b), 0))$$ $$Ff: (a, (c,1)) \mapsto (f_A(a), (f_C(c), 1))$$(note that a disjoint union is usually comprised of an index, and an object from the set with that index, so in this case, $B$ has index $0$, and $C$ has index $1$)
+    
+    And $G$ is defined in much a similar way. Now, assume WLOG that we start with $(a, (b, 0))$, we can start with $c \in C$, but the logic is still much the same. Then, go across, and we get $((a,b), 0)$. Then, going down, the morphism acts on each component to get $((f_A(a), f_B(b)), 0)$.
+
+    Starting again with $(a, (b,0))$, going down we get $(f_A(a), (f_B(b), 0))$ and going across, we get $((f_A(a), f_B(b)), 0)$, hence it is natural. 
+
+    The inverse maps are fairly obvious, $\eta ^{-1}: ((a,b),0) \mapsto (a, (b,0))$ by just moving parentheses around.
+\end{enumerate}
+
+Okay you're just going to have to trust me that everything works out here lol. I wanna get to the next section in a relatively timely fashion.
+\end{solution}
+
+\begin{exercise}[Riehl 1.4.1]
+\
+
+Suppose $\alpha: F \to G$ is a natural isomorphism. Show that the inverses of
+the component morphisms define the components of a natural isomorphism $\alpha ^{-1} : G \to F$.
+\end{exercise}
+
+\begin{solution}
+\
+
+Consider 
+
+\[\begin{tikzcd}
+	FA && GA \\
+    \\
+    FB && GB
+    \arrow[from=1-1, to=1-3, "\varphi_A"]
+    \arrow[from=3-1, to=3-3, "\varphi_B"]
+    \arrow[from=1-1, to=3-1, "Ff"']
+    \arrow[from=1-3, to=3-3, "Gf"']
+\end{tikzcd}\]
+
+Since this is natural, $$Gf \circ \varphi_A = \varphi_B \circ Ff$$then, postcompose by $\varphi_B ^{-1}$ to get $$\varphi_B ^{-1} \circ Gf \circ \varphi_A = Ff$$and precompose by $\varphi_A ^{-1}$ to get $$\varphi_B ^{-1} \circ Gf = Ff \circ \varphi_A ^{-1}$$which notice, is exactly the statement needed to show that this is natural with respect to the inverse components.
+\end{solution}
+
+\subsection{Equivalence of Categories}
+\
+
+\begin{lemma}
+\
+
+Let $\mathbbm{2}$ be a category with only two objects, $0,1 \in \mathbbm{2}$ and one morphism $m: 0 \to 1$.
+
+Let $C, D$ be categories, $F,G: C \to D$ be functors. Then, natural transformations $\alpha: F \to G$ correspond bijectively to functors $H: C \times \mathbbm{2} \to D$, coupled with injections $i_0: C \to C \times \mathbbm{2}$ and $i_1: C \to C \times \mathbbm{2}$ such that $H \circ i_0 = F$ and $H \circ i_1 = G$, and the following diagram commutes:
+
+\[\begin{tikzcd}
+	C && C \times \mathbbm{2} && C \\
+    \\
+    && D &&
+    \arrow[hook, from=1-1, to=1-3, "i_0"]
+    \arrow[hook, from=1-5, to=1-3, "i_1"']
+    \arrow[from=1-1, to=3-3, "F"']
+    \arrow[from=1-5, to=3-3, "G"]
+    \arrow[from=1-3, to=3-3, "H"]
+\end{tikzcd}\]
+\end{lemma}
+
+\begin{customproof}
+\
+
+Let $H: C \times \mathbbm{2} \to D$ take $(c,0) \mapsto F(c)$ and $(c,1) \mapsto \alpha \circ F(c)$. Then, starting with some $c \in C$ (the top left one), we get $i_0(c) = (c,0)$ and $H \circ i_0(c) = F(c)$. Starting back at the top left, we get that $F(c) = F(c)$, and hence, this part of the diagram commutes. 
+
+Starting at $c \in C$ (the top right one), we get $i_1(c) = (c,1)$ and $H \circ i_1(c) = \alpha \circ F(c) = (\alpha(F))(c) = G(c)$
+
+Starting back at the top right, we get $G(c) = G(c)$, and so this diagram commutes. 
+
+And, notice for every $c \in C$, we have two copies in $C \times \mathbbm{2}$, $(c,0)$ and $(c,1)$, and some mapping $d_c: (c,0) \mapsto (c, 1)$ such that $H(c,0) = Fc$ and $H(c,1) = Gc$, and $Hd_c = \alpha_{Fc}$. Then, we can see that $H$ is uniquely determined by the components $\alpha$ and as such, this structure is indeed in bijection with $\alpha: F \to G$.
+\end{customproof}
+
+\begin{definition}[Walking Arrows and Isomorphisms]
+\
+
+The category $\mathbbm{2}$ is called the \textbf{walking arrow} or the since every functor $F: \mathbbm{2} \to C$ to some category $C$ is basically "picking out an arrow in $C$" in the sense that there is only one morphism in $\mathbb{2}$, $F$ decides where it is sent, and the two objects, which are the domain and codomain of the arrow must follow suit.
+
+Likewise, the category $\mathbbm{I}$ is called the \textbf{walking isomorphism} because it has two objects, $0,1$ with two nontrivial maps, $a: 0 \to 1$, and $a ^{-1}: 1 \to 0$ such that they are inverses. In much the same way, any functor $G: \mathbbm{I} \to C$ picks out an isomorphism in $C$. 
+\end{definition}
+
+\begin{definition}[Equivalent Categories]
+\
+
+Categories $C$ and $D$ are \textbf{equivalent}, notated $C \cong D$, if there are functors $F: C \to D$ and $G: D \to C$, along with natural isomorphisms $\eta: 1_C \to G \circ F$, and $\varphi: 1_D \to F \circ G$.
+\end{definition}
+
+\begin{lemma}
+\
+
+Show that category equivalence is an equivalence relation.
+\end{lemma}
+
+\begin{customproof}
+\
+
+We want to show reflexivity, transitivity, and symmetry. 
+
+It is reflexive, because some category $C$ is equivalent to itself by letting $F = 1_C$, $G = 1_C$, and then $1_C$ is naturally isomorphic to $1_C \circ 1_C$ (no shit).
+
+Let $C, D, E$ be categories, $C \cong D$, $D \cong E$. Then, there exists morphisms: \begin{enumerate}
+    \item $F: C \to D$
+    \item $G: D \to C$
+    \item $H: D \to E$
+    \item $I: E \to D$
+\end{enumerate}such that these are all natural isomorphisms:
+\begin{enumerate}
+    \item $\eta: 1_C \to GF$
+    \item $\epsilon: 1_D \to FG$
+    \item $\delta: 1_D \to IH$
+    \item $\varphi: I_E \to HI$
+\end{enumerate}
+
+Then, we want to show that the following diagram commutes and is naturally isomorphic \[\begin{tikzcd}
+	c && GIHF c\\
+    \\
+    c' && GIHF c'
+    \arrow[from=1-1, to=1-3, "\tau_c"]
+    \arrow[from=1-3, to=3-3, "GIHFf"]
+    \arrow[from=1-1, to=3-1, "f"']
+    \arrow[from=3-1, to=3-3, "\tau_{c'}"']
+\end{tikzcd}\]
+
+But notice that since $IH \cong 1_D$, we get $GIHF = GF = 1_C$, and the identity functor is natural to itself, so $\tau$ is a natural transformation, and it is it's own inverse (since it is actually the identity).
+
+And finally, if categories $X \cong Y$ then $Y \cong X$ by just reversing the functors. 
+\end{customproof}
+
+\begin{definition}[Full \& Faithful Functors]
+\
+
+A functor $F:C \to D$ is \textbf{full} if for each $x,y \in C$, the map $C(x,y) \to D(Fx, Fy)$ is surjective, or every arrow between the two objects in $D$ gets mapped to by an arrow in $C$
+
+It is \textbf{faithful} if $C(x,y) \to D(Fx, Fy)$ is injective, or if every arrow between $x,y$ in $C$ gets sent to a unique arrow in $D$
+
+And \textbf{essentially surjective on objects} if for every $d \in D$, there is some $c \in C$ such that $d \cong Fc$, or every object in $D$ is hit by $F$.     
+
+Note that fullness and faithfullness are local properties, an object can be full or faithful with respect to objects $x,y \in C$, but maybe not for any other objects in $C$. If we don't specify, assume it's globally full/faithful.
+\end{definition}
+
+\begin{definition}[Embeddings]
+\
+
+A globally faithful functor which is also injective on objects is called an \textbf{embedding}, and means that the domain can be viewed as a subcategory of the codomain.
+
+A \textbf{fully faithful} (full and faithful) functor which is injective on objects is called a \textbf{full embedding}, and the range is called a \textbf{full subcategory} of the codomain.
+
+A \textbf{full subcategory} $D \subseteq C$ is such that for $x,y \in D$, $D(x,y) \cong C(x,y)$. 
+\end{definition}
+
+\begin{theorem}
+\
+
+Any functor which defines an equivalence of categories must be full, faithful, and essentially surjective on objects. If we also assume the axiom of choice, then any such functor also defines an equivalence of categories.
+\end{theorem}
+
+\begin{lemma}
+\
+
+Any morphism $f: a \to b$, with isomorphisms $a \cong a'$ and $b \cong b'$ determines a unique morphism $f': a' \to b'$ such that all four of the diagrams below commute:
+
+\[\begin{tikzcd}
+	a &&  a'\\
+    \\
+    b &&  b'
+    \arrow[from=1-1, to=1-3, "\cong"]
+    \arrow[from=1-3, to=3-3, "f'"]
+    \arrow[from=1-1, to=3-1, "f"']
+    \arrow[from=3-1, to=3-3, "\cong"']
+\end{tikzcd}\]
+
+\[\begin{tikzcd}
+	a &&  a'\\
+    \\
+    b &&  b'
+    \arrow[from=1-3, to=1-1, "\cong"]
+    \arrow[from=1-3, to=3-3, "f'"]
+    \arrow[from=1-1, to=3-1, "f"']
+    \arrow[from=3-1, to=3-3, "\cong"']
+\end{tikzcd}\]
+
+\[\begin{tikzcd}
+	a &&  a'\\
+    \\
+    b &&  b'
+    \arrow[ from=1-1, to=1-3, "\cong"]
+    \arrow[ from=1-3, to=3-3, "f'"]
+    \arrow[from=1-1, to=3-1, "f"']
+    \arrow[from=3-3, to=3-1, "\cong"']
+\end{tikzcd}\]
+
+\[\begin{tikzcd}
+	a &&  a'\\
+    \\
+    b &&  b'
+    \arrow[ from=1-3, to=1-1, "\cong"]
+    \arrow[ from=1-3, to=3-3, "f'"]
+    \arrow[from=1-1, to=3-1, "f"']
+    \arrow[from=3-3, to=3-1, "\cong"']
+\end{tikzcd}\]
+\end{lemma}
+
+\begin{customproof}[Proof of Lemma]
+\
+
+Assume that $f'$ such that the first diagram is commutative, and we define the rest. This means that we assume $f(a) = b \cong b' = f'(a')$
+
+On the second diagram, starting in the top right with $a'$ and going down, we get $f'(a')$. Instead, going left, we get $a$, going down, we get $f(a) = b$, and going across, we get $b' = f'(a')$ so this diagram is commutative.
+
+On the third diagram, starting at the top left, going down we get $f(a) = b$. Instead, starting at the top, and going across, we get $a'$, going down we get $f'(a') = b'$, and going left, we get $b' \cong b$, so this diagram does commute.
+
+On the fourth diagram, starting at the top right, and going down, we get $f'(a') = b'$ and then going left we get $f'(a') = b' \cong b$. Instead, going left, we get $a' \cong a$, and $f(a) = b$, so this diagram is commutative.
+\end{customproof}
+
+\begin{customproof}[Proof of Theorem]
+\
+
+Suppose that $C \cong D$, so the following commutes and is an isomorphism:
+
+\[\begin{tikzcd}
+	c &&  FGc\\
+    \\
+    c' &&  FGc'
+    \arrow[ from=1-1, to=1-3, "\eta_c"]
+    \arrow[ from=1-3, to=3-3, "FGf"]
+    \arrow[from=1-1, to=3-1, "f"']
+    \arrow[from=3-1, to=3-3, "\eta_{c'}"']
+\end{tikzcd}\]
+
+and we want to show that $F$ is full, essentially surjective on objects, and faithful (but the same argument applies to $G$).
+
+Since $1_C \cong GF$, this implies that $G$ must be full and $F$ must be faithful, and $G$ must be essentially surjective on objects, otherwise you would not be able to map all morphisms and objects to themselves.
+
+Since $FG \cong 1_D$, this implies $F$ must be essentially surjective on objects, full, and $G$ must be faithful. Otherwise, you would not be able to map all morphisms and objects to themselves.
+
+Hence, in order for $F$ or $G$ to be involved in a category equivalence, they must be full, faithful, and essentially surjective on objects. (Bonus: also, in the first example, $F$ must be an embedding, in the second, $G$ must be an embedding).
+
+Uhh i dont know anything about ZFC so im not going to do the second part, maybe ill come back to it when i have more background.
+\end{customproof}
+
+\begin{definition}[Connected Categories]
+\
+
+A category $C$ is connected if for any pair of objects $x,y \in C$, there exists a finite set of morphisms $\{f_0: x \to x_1, f_1: x_1 \to x_2, \dots, f_n: x_n \to y\}$, basically a chain of morphisms connecting one to the other.
+\end{definition}
+
+\begin{proposition}
+\
+
+Any connected groupoid is equivalent, as a category, to the automorphism group of any of it's objects.
+\end{proposition}
+
+\begin{customproof}
+\
+
+Recall that a groupoid is a category where every morphism is an isomorphism.
+
+Then, let $G$ be a groupoid, let $H$ be a category of just one object from $G$ along with it's automorphisms, let $A: H \to G$ be a functor mapping the object back to itself in $G$. 
+
+Then, $A$ is essentially surjective on objects, because for all $g \in G$, since $G$ is connected, there is a morphism $g \to Ah$, and since it is a groupoid, this is an isomorphism, so all $g \in G$ is isomorphic to $Ah$.
+
+
+It is full and faithful because picking some $h, h \in H$, there is a bijection between $H(h,h)$, and $G(h,h)$.
+
+Hence these categories are equivalent
+\end{customproof}
+
+\begin{corollary}
+\
+
+In a path connected space $X$, any choice of basepoint $x \in X$ yields an isomorphic fundamental group $\pi_1(X,x)$/
+\end{corollary}
+
+\begin{customproof}
+\
+
+Any space is a category whose objects are points and whose morphisms are paths with starting point in the domain and end point being the codomain. Then, it is a groupoid, since paths can be reversed, since it is path connected, it is connected as a category and the fundamental group with respect to some basepoint is the set of all automorphisms of that point. 
+
+Then, by the previous proposition, the automorphism group as a category is equivalent to the sapce.
+\end{customproof}
+
+\begin{definition}[Skeletal Categories]
+\
+
+A category $C$ is \textbf{skeletal} if no two objects are isomorphic to each other. The skeleton of a category $C$, notated $skC$, is basically just "modding out" by isomorphisms. 
+\end{definition}
+
+\begin{definition}[Essentially \_]
+\
+
+A cateory is \textbf{essentially small} if it is equivalent to a small category.
+
+A category is \textbf{essentially discrete} if it is equivalent to a discrete category. 
+\end{definition}
+
+\begin{exercise}[Exercise 4]
+\
+
+Show that a full and faithful functor $F: C \to D$ both \textbf{reflects} and \textbf{creates} isomorphisms, that is, show:
+
+\begin{enumerate}
+    \item If $f$ is a morphism in $C$, and $Ff$ is an isomorphism in $D$, show that $f$ is an isomorphism
+    \item If $x$ and $y$ are objects in $C$ so that $Fx$ and $Fy$ are isomorphic in $D$, then $x$ and $y$ are isomorphic in $C$.
+\end{enumerate}
+\end{exercise}
+
+\begin{solution}
+\
+
+\begin{enumerate}
+    \item If $Ff: Fx \to Fy$ is an isomorphism in $D$, then there is some $g ^{-1}: Fy \to Fx$ such that $$Ff \circ g ^{-1} = 1_{Fy}$$ and $$g ^{-1} \circ Ff = 1_{Fx}$$Since $F$ is full and faithful, $g ^{-1} = F g$ for some $g: y \to x$. Then, $$Fg \circ Ff = F 1_x$$ implies $$F(g \circ f) = F 1_{x}$$ which implies $g \circ f = 1_x$ and the same goes for $f \circ g$.
+    \item Let $Fx$, $Fy$ be related by isomorphism. Then, by $F$ being full and faithful, $x$ and $y$ must be related by some morphism. Since $Fx$ and $Fy$ are related by an isomorphism, so are $x$ and $y$ by the prior part.
+\end{enumerate}
+\end{solution}
+
+\subsection{The Art of the Diagram Chase}
+\
+
+\begin{definition}[Monoid]
+\
+
+A \textbf{monoid} is an object $M \in \text{Set}$ with a pair of morphisms $\mu: M \times M \to M$ and $\eta: 1 \to M$ (with $1$ being a $1$ object set) such that the following diagrams commute:  
+
+
+\[\begin{tikzcd}
+	M \times M \times M &&  M \times M\\
+    \\
+    M\times M &&  M
+    \arrow[ from=1-1, to=1-3, "1_M \times \mu"]
+    \arrow[ from=1-3, to=3-3, "\mu"]
+    \arrow[from=1-1, to=3-1, "\mu \times 1_M"']
+    \arrow[from=3-1, to=3-3, "\mu"']
+\end{tikzcd}\]
+
+
+\[\begin{tikzcd}
+	M &&  M \times M && M\\
+    \\
+    && M &&  
+    \arrow[ from=1-1, to=1-3, "\eta \times 1_M"]
+    \arrow[ from=1-3, to=3-3, "\mu"]
+    \arrow[from=1-5, to=1-3, "1_M \times \eta"']
+    \arrow[from=1-1, to=3-3, "1_M"']
+    \arrow[from=1-5, to=3-3, "1_M"]
+\end{tikzcd}\]
+\end{definition}
+
+\begin{definition}[Topological Monoid]
+\
+
+A \textbf{topological monoid} is an object $M \in \text{Top}$ with a pair of morphisms $\mu: M \times M \to M$ and $\eta: 1 \to M$ (with $1$ being the trivial topological space) such that the following diagrams commute:  
+
+
+\[\begin{tikzcd}
+	M \times M \times M &&  M \times M\\
+    \\
+    M\times M &&  M
+    \arrow[ from=1-1, to=1-3, "1_M \times \mu"]
+    \arrow[ from=1-3, to=3-3, "\mu"]
+    \arrow[from=1-1, to=3-1, "\mu \times 1_M"']
+    \arrow[from=3-1, to=3-3, "\mu"']
+\end{tikzcd}\]
+
+
+\[\begin{tikzcd}
+	M &&  M \times M && M\\
+    \\
+    && M &&  
+    \arrow[ from=1-1, to=1-3, "\eta \times 1_M"]
+    \arrow[ from=1-3, to=3-3, "\mu"]
+    \arrow[from=1-5, to=1-3, "1_M \times \eta"']
+    \arrow[from=1-1, to=3-3, "1_M"']
+    \arrow[from=1-5, to=3-3, "1_M"]
+\end{tikzcd}\]
+\end{definition}
+
+\begin{definition}[Unital Ring]
+\
+
+A \textbf{unital ring} is an object $M \in \text{Ab}$ with a pair of morphisms $\mu: M \otimes_\mathbb{Z} M \to M$ and $\eta: 1 \to M$ (with $1$ being the trivial group) such that the following diagrams commute:  
+
+
+\[\begin{tikzcd}
+	M \otimes_\mathbb{Z} M \otimes_\mathbb{Z} M &&  M \otimes_\mathbb{Z} M\\
+    \\
+    M\otimes_\mathbb{Z} M &&  M
+    \arrow[ from=1-1, to=1-3, "1_M \otimes_\mathbb{Z} \mu"]
+    \arrow[ from=1-3, to=3-3, "\mu"]
+    \arrow[from=1-1, to=3-1, "\mu \otimes_\mathbb{Z} 1_M"']
+    \arrow[from=3-1, to=3-3, "\mu"']
+\end{tikzcd}\]
+
+
+\[\begin{tikzcd}
+	M &&  M \otimes_\mathbb{Z} M && M\\
+    \\
+    && M &&  
+    \arrow[ from=1-1, to=1-3, "\eta \otimes_\mathbb{Z} 1_M"]
+    \arrow[ from=1-3, to=3-3, "\mu"]
+    \arrow[from=1-5, to=1-3, "1_M \otimes_\mathbb{Z} \eta"']
+    \arrow[from=1-1, to=3-3, "1_M"']
+    \arrow[from=1-5, to=3-3, "1_M"]
+\end{tikzcd}\]
+\end{definition}
+
+\begin{definition}[$\Bbbk$-algebra]
+\
+
+A \textbf{$\Bbbk$ algebra} is an object $M \in \text{Vect}_\Bbbk$ with a pair of morphisms $\mu: M \otimes_\Bbbk M \to M$ and $\eta: 1 \to M$ (with $1$ being the trivial group) such that the following diagrams commute:  
+
+
+\[\begin{tikzcd}
+	M \otimes_\Bbbk M \otimes_\Bbbk M &&  M \otimes_\Bbbk M\\
+    \\
+    M\otimes_\Bbbk M &&  M
+    \arrow[ from=1-1, to=1-3, "1_M \otimes_\Bbbk \mu"]
+    \arrow[ from=1-3, to=3-3, "\mu"]
+    \arrow[from=1-1, to=3-1, "\mu \otimes_\Bbbk 1_M"']
+    \arrow[from=3-1, to=3-3, "\mu"']
+\end{tikzcd}\]
+
+
+\[\begin{tikzcd}
+	M &&  M \otimes_\Bbbk M && M\\
+    \\
+    && M &&  
+    \arrow[ from=1-1, to=1-3, "\eta \otimes_\Bbbk 1_M"]
+    \arrow[ from=1-3, to=3-3, "\mu"]
+    \arrow[from=1-5, to=1-3, "1_M \otimes_\Bbbk \eta"']
+    \arrow[from=1-1, to=3-3, "1_M"']
+    \arrow[from=1-5, to=3-3, "1_M"]
+\end{tikzcd}\]
+\end{definition}
+
+\begin{definition}[Diagram]
+\
+
+A \textbf{diagram} in a category $C$ is a functor $F: J \to C$ ($J$ is some other category) whose domain is referred to as the \textbf{indexing category} of the diagram.  
+\end{definition}
+
+\begin{lemma}
+\
+
+Functors preserve commutative diagrams.
+\end{lemma}
+
+\begin{customproof}
+\
+
+We want to show that if $F: J \to C$ is a commutative diagram, and $G: C \to D$ is a functor, that $GF: J \to D$ is a commutative diagram.
+
+Let $F: J \to C$ be a commutative diagram, and morphisms in $J$ such that $b \circ a = b' \circ a'$ and by functoriality, this means that $Fb \circ Fa = Fb' \circ Fa'$. But then also by functoriality, $GFb \circ GFa = GFb' \circ GFa'$. Hence, functors preserve commutative diagrams.
+\end{customproof}
+
+\begin{example}
+\
+
+The diagram of $\mathbbm{2} \times \mathbbm{2}$, the \textbf{commutative square}, is given by:
+
+\[\begin{tikzcd}
+	\cdot &&  \cdot\\
+    \\
+    \cdot && \cdot
+    \arrow[ from=1-1, to=1-3 ]
+    \arrow[ from=1-3, to=3-3]
+    \arrow[from=1-1, to=3-3]
+    \arrow[from=1-1, to=3-1]
+    \arrow[from=3-1, to=3-3]
+\end{tikzcd}\]only nonidentity morphisms shown.
+\end{example}
+
+\begin{example}
+\
+
+The diagram of $4$ is given by: 
+
+\[\begin{tikzcd}
+	 &&   2 &&\\
+    \\
+    1 && && 4\\
+    \\
+    && 3 &&
+    \arrow[from=3-1, to=1-3]
+    \arrow[from=1-3, to=5-3]
+    \arrow[from=3-1, to=5-3]
+    \arrow[from=5-3, to=3-5]
+    \arrow[from=3-1, to=3-5]
+    \arrow[from=1-3, to=3-5]
+\end{tikzcd}\]
+You can think of the arrows as order relations, pointing towards larger numbers. We also labeled the elements with their numbers here, but in general, there might not be labels. 
+\end{example}
+
+\begin{example}
+\
+
+This is the \textbf{commutative rectangle} or $2 \times 3$ 
+
+\[\begin{tikzcd}
+	a &&b &&c \\
+    \\
+    a' &&b' &&c'
+    \arrow[from=1-1, to=1-3]
+    \arrow[from=1-3, to=1-5]
+    \arrow[from=1-1, to=3-1]
+    \arrow[from=3-1, to=3-3]
+    \arrow[from=3-3, to=3-5]
+    \arrow[from=1-3, to=3-3]
+    \arrow[from=1-5, to=3-5]
+\end{tikzcd}\]
+
+In this one, the diagonal morphisms have been omitted.
+\end{example}
+
+\begin{lemma}
+\
+
+Let $f_1, \dots, f_n$ be a composable sequence of morphisms in some category, let the composite $f_k f_{k-1} \dots f_{i+1}f_i$ equal $g_m \dots g_1$ for some other composeable sequence of morphisms $g_1, \dots, g_m$. Then, $f_n \dots f_1 = f_n \dots f_{k+1} g_m \dots g_1 f_{i-1} \dots f_1$
+\end{lemma}
+
+\begin{customproof}
+\
+
+Let $g_m \dots g_1 = G$, $f_n \dots f_{k+1} = F'$, and $f_{i-1} \dots f_1 = F$, and $f_{k} \dots f_i = G'$. Then, the initial sequence is $F'G'F$ but since $G=G'$, $F'G'F = F'GF$. We can also check that the domains are well defined as well.
+\end{customproof}
+
+\begin{example}
+\
+
+The category $\mathbbm{2} \times \mathbbm{2} \times \mathbbm{2}$ has a diagram of a \textbf{commutative cube}, which looks like 
+
+\[\begin{tikzcd}
+	\cdot &&\cdot && \\
+    & \cdot && \cdot \\ \\
+    \cdot && \cdot &&\\
+    & \cdot && \cdot
+    \arrow[from=1-1, to=1-3]
+    \arrow[from=1-1, to=2-2]
+    \arrow[from=1-3, to=2-4]
+    \arrow[from=2-2, to=2-4]
+    \arrow[from=1-1, to=4-1]
+    \arrow[from=1-3, to=4-3]
+    \arrow[from=2-2, to=5-2]
+    \arrow[from=2-4, to=5-4]
+    \arrow[from=4-1, to=5-2]
+    \arrow[from=4-1, to=4-3]
+    \arrow[from=4-3, to=5-4]
+    \arrow[from=5-2, to=5-4]
+\end{tikzcd}\]
+\end{example}
+
+\begin{definition}[Minimal Subdiagrams]
+\
+
+In a diagram, a \textbf{minimal subdiagram} is a relation $h_n \dots h_1 = k_m \dots k_1$ that cannot be factored into a relation between shorter paths of composable morphisms (so no such $h_{i_2} \dots h_{i_1} = k_{j_2} \dots k_{j_1})$
+
+Minimal subdiagrams look like:
+
+\[\begin{tikzcd}
+& \cdot & \cdot & \cdot & \cdot&\\
+\cdot &&&&&\cdot \\
+& \cdot & \cdot & \cdot & \cdot&
+\arrow[from=2-1,to=1-2, "h_1"]
+\arrow[from=1-2,to=1-3, "h_2"]
+\arrow[dashed, no head, no tail, from=1-3, to=1-4]
+\arrow[from=1-4, to=1-5, "h_{n-1}"]
+\arrow[from=1-5, to=2-6, "h_n"]
+\arrow[from=2-1,to=3-2, "k_1"]
+\arrow[from=3-2,to=3-3, "k_2"]
+\arrow[dashed, no head, no tail, from=3-3, to=3-4]
+\arrow[from=3-4, to=3-5, "k_{m-1}"]
+\arrow[from=3-5, to=2-6, "k_m"]
+\end{tikzcd}\]
+\end{definition}
+
+\begin{corollary}
+\
+
+To show the commutativity of a diagram, it is sufficient to check the commutativity of every minimal subdiagram.
+\end{corollary}
+
+\begin{customproof}
+\
+
+As an application of the prior subsequence replacement lemma, we can see that if two minimal diagrams commute individually, the diagram of their composotion also commutes. An entire category is made of such minimal diagrams, hence if all of the minimal diagrams commute so does the entire category.
+\end{customproof}
+
+\begin{lemma}
+\
+
+Let $f$ be an isomorphism. Then the first diagram commutes iff the second commutes.
+
+\[\begin{tikzcd} \cdot & & \\
+& & \cdot \\
+\cdot & &
+\arrow[from=1-1, to=3-1, "f"']
+\arrow[from=1-1,to=2-3, "h"]
+\arrow[from=3-1, to=2-3, "g"']
+\end{tikzcd}\]
+
+\[\begin{tikzcd} \cdot & & \\
+& & \cdot \\
+\cdot & &
+\arrow[from=3-1, to=1-1, "f ^{-1}"]
+\arrow[from=1-1,to=2-3, "h"]
+\arrow[from=3-1, to=2-3, "g"']
+\end{tikzcd}\]
+
+And dually, if $k$ is an isomorphism, the first diagram commutes iff the second diagram commutes.
+
+\[\begin{tikzcd}
+    & & \cdot\\
+    \cdot & & \\
+    & & \cdot
+    \arrow[from=2-1, to=1-3, "j"]
+    \arrow[from=2-1, to=3-3, "l"']
+    \arrow[from=1-3, to=3-3, "k"]
+\end{tikzcd}\]
+
+\[\begin{tikzcd}
+    & & \cdot\\
+    \cdot & & \\
+    & & \cdot
+    \arrow[from=2-1, to=1-3, "j"]
+    \arrow[from=2-1, to=3-3, "l"']
+    \arrow[from=3-3, to=1-3, "k ^{-1}"']
+\end{tikzcd}\]
+\end{lemma}
+
+\begin{customproof}
+\
+
+The first diagram commuting means $gf = h$. But then, precomposing by $f ^{-1}$, we get $g = hf ^{-1}$ meaning the second diagram commutes. The dual is true (by duality).
+\end{customproof}
+
+\begin{lemma}
+\
+
+For any commutative square $\beta\alpha= \delta\gamma$ where $\beta, \alpha, \delta, \gamma$ are isomorphisms, then the inverses $\alpha ^{-1} \beta ^{-1} = \gamma ^{-1}\delta ^{-1}$ also define a commutative square.
+\end{lemma}
+
+\begin{customproof}
+\
+
+Postcompose with $\beta ^{-1}$ to get $$\alpha = \beta ^{-1} \delta \gamma$$Precompose with $\gamma ^{-1}$ to get $$\alpha \gamma ^{-1} = \beta ^{-1} \delta$$Postcompose with $\alpha ^{-1}$ to get $$\gamma ^{-1} = \alpha ^{-1} \beta ^{-1} \delta$$and precompose with $\delta ^{-1}$ to get $$\alpha ^{-1}\beta ^{-1} = \gamma ^{-1} \delta ^{-1}$$
+\end{customproof}
+
+\begin{definition}[Initial and Final Objects]
+\
+
+An object $i \in C$ is \textbf{initial} if for every $c \in C$, there is a unique morphism $i \to c$. 
+
+An object $t \in C$ is \textbf{terminal} or \textbf{final} if for every $c \in C$ there is a unique morphism $c \to t$.
+\end{definition}
+
+\begin{example}
+\
+
+\begin{enumerate}
+    \item In $\text{Set}$, the empty set is initial and any singleton set is terminal.
+    \item In $\text{Top}$, the empty space is initial, and any singleton space is terminal.
+    \item In $\text{Set}_*$, the category of pointed sets, any singleton set is both initial and terminal.
+    \item In $\text{Mod}_R$, the zero module is both initial and terminal.
+    \item In $\text{Grp}$, the trivial group is both initial and terminal.
+    \item 
+\end{enumerate}
+\end{example}
+
+\begin{lemma}
+\
+
+Let $f_1, \dots, f_n$ and $g_1, \dots, g_m$ be sequences of composable morphisms, and let the domain of $f_1$ and $g_1$ be the same, and let the codomain of $f_n, g_m$ be the same. Then, if either the domain of $f_1$ is initial, or the codomain of $f_n$ is terminal, then $f_n \dots f_1 = g_m \dots g_1$
+\end{lemma}
+
+\begin{customproof}
+\
+
+Let $i$ be an initial object, $c$ be the codomain of $f_n$ and $g_m$. Then, $f_n \dots f_1$ and $g_m \dots g_1$ are both morphisms mapping from $i$ to $c$, hence they must be equal by definition of initial objects.
+
+Much the same argument works for final objects.
+\end{customproof}
+
+\begin{definition}[Concrete Category]
+\
+
+A \textbf{concrete category} is a category $C$ that has a faithful functor $F: C \to \text{Set}$ 
+\end{definition}
+
+\begin{remark}
+\
+
+Oftentimes, this functor is the forgetful functor. Concrete categories are categories that can be thought of as "sets with additional structure".
+\end{remark}
+
+\begin{example}
+\
+
+$\text{Grp}$ is a concrete category under the forgetful functor.
+
+$\text{Ho(Top)}$ the homotopy category, is NOT a concrete category.
+\end{example}
+
+\begin{lemma}
+\
+
+Consider the following morphisms:
+
+\[\begin{tikzcd}
+    a & b & c\\
+    a' & b' & c'
+    \arrow[from=1-1,to=1-2, "f"]
+    \arrow[from=1-2,to=1-3, "j"]
+    \arrow[from=1-3, to=2-3, "l"]
+    \arrow[from=1-1, to=2-1, "g"']
+    \arrow[from=2-1, to=2-2, "k"']
+    \arrow[from=2-2, to=2-3, "m"']
+    \arrow[from=1-2, to=2-2, "h"]
+\end{tikzcd}\]
+
+And suppose the outer rectangle composed of morphisms $f, j, g, k, l, m$ commutes. Then, the entire diagram commutes if either: \begin{enumerate}
+    \item the right hand square commutes and $m$ is a monomorphism
+    \item the left hand square commutes and $f$ is an epimorphism
+\end{enumerate}
+\end{lemma}
+
+\begin{customproof}
+\
+
+These statements are duals of each other so it suffices to prove only one. Suppose $m$ is a monomorphism and $mh = lj$. Then, we already know that $mkg = ljf$ so we want to show that $mhf$ equals one of them. Since the right hand square commutes, we know that $lj = mh$, so $$mkg = ljf = mhf$$but then by monicness, we know that $kg = hf$, so the entire square commutes.
+\end{customproof}
+
+\begin{exercise}[1.6.i]
+\
+
+Show that any map from a terminal object in a category to an initial one is an isomorphism. An object that is both terminal and initial is called a \textbf{zero object}. 
+\end{exercise}
+
+\begin{solution}
+\
+
+Let $i, t \in C$ be initial and terminal objects respectively. Then, supppose that $f: t \to i$ was not an isomorphism, and there existed a $g: i \to t$, such that $f \circ g \neq \text{id}_i$. Then, $f \circ g$ is an endomorphism on $i$, and so $g \circ (f \circ g) \neq g$ defines another morphism from $i \to t$. But there can only be one morphism from $i$ to $t$ (what it means to be initial) and so a contradiction, $f \circ g = \text{id}_i$.
+\end{solution}
+
+\begin{exercise}[1.6.ii]
+\
+
+Show any two terminal objects are connected by a unique isomorphism.
+\end{exercise}
+
+\begin{solution}
+\
+
+Let $t_1, t_2 \in C$ be terminal objects. Then, there are unique morphisms $f: t_1 \to t_2$ and $g: t_2 \to t_1$. Then, if $f \circ g \neq \text{id}_{t_2}$, then, consider $g \circ f \circ g$ another morphism $t_2 \to t_1$, but this is a contradiction.
+\end{solution}
+
+\begin{exercise}[1.6.iii]
+\
+
+Show that any faithful functor reflects monomorphisms.
+\end{exercise}
+
+\begin{solution}
+\
+
+Let $Ff$ be monic, $Ff \circ Fg_1 = Ff \circ Fg_2 \implies Fg_1 = Fg_2$. Then, suppose $f$ was not monic, so for some $g_1, g_2$, we have $f \circ g_1 = f \circ g_2$ but $g_1 \neq g_2$. Then, apply $F$, we get $$Ff \circ Fg_1 = Ff \circ Fg_2$$and by faithfulness, we still have $Fg_1 \neq Fg_2$, but this is a contradiction.
+\end{solution}
+
+\begin{exercise}[1.6.vi]
+\
+
+A \textbf{coalgebra} of an endofunctor $T: C \to C$ is an object $c \in C$, equipped with a map $\gamma: c \to Tc$. A morphism of coalgebras $f: (c, \gamma) \to (c', \gamma')$ is a map where the following square commutes: \[\begin{tikzcd}
+    c & c'\\
+    Tc & Tc'
+    \arrow[from=1-1, to=1-2, "f"]
+    \arrow[from=1-1,to=2-1, "\gamma"']
+    \arrow[from=1-2, to=2-2, "\gamma'"]
+    \arrow[from=2-1, to=2-2, "Tf"']
+\end{tikzcd}\]Note that for a regular algebra, there is a structure map pointing into the object, $\gamma: Tc \to c$, but for a coalgebra, it is pointing out of the object.
+
+Prove that if $(c,\gamma)$ is a \textbf{terminal coalgebra}, this implies that $\gamma: c \to Tc$ is an isomorphism. 
+\end{exercise}
+
+\begin{solution}
+\
+
+If $(c, \gamma)$ is a terminal coalgebra, consider the coalgebra $(Tc, T\gamma)$ is a coalgebra. Then, there must be a morphism $f: Tc \to c$ by terminality of $(c, \gamma)$, but there is also the structure map $\gamma: c \to Tc$, hence by prior exercises, these must be isomorphic.
+\end{solution}
+
+\subsection{The $2$-category of categories}
+\
+
+\begin{definition}[Functor Categories]
+\
+
+For any categories $C, D$, there is a \textbf{functor category} $D^C$ whose objects are functors $F: C \to D$ and whose morphisms are natural transformations. 
+
+In this category, the identity morphism is the identity transformation $\text{id}_F: F \to F$
+\end{definition}
+
+\begin{lemma}[Vertical Composition]
+\
+
+Suppose $\alpha: F \to G$, $\beta:G \to H$ are natural transformations between functors $F, G, H: C \to D$. Show that $\beta \cdot \alpha: F \to H$ defines a natural transformation, and the components are $(\beta \cdot \alpha)_c = \beta_c \cdot \alpha_c$, the composites of components of $\beta$ and $\alpha$.
+\end{lemma}
+
+\begin{customproof}
+\
+
+We have the diagram \[\begin{tikzcd}
+    Fa & Ga & Ha\\
+    Fb & Gb & Hb
+    \arrow[from=1-1,to=1-2, "\alpha_a"]
+    \arrow[from=1-2, to=1-3, "\beta_a"]
+    \arrow[from=2-1, to=2-2, "\alpha_b"']
+    \arrow[from=2-2, to=2-3, "\beta_b"']
+    \arrow[from=1-1, to=2-1, "Ff"]
+    \arrow[from=1-2, to=2-2, "Gf"]
+    \arrow[from=1-3, to=2-3, "Hf"]
+\end{tikzcd}\]
+
+We want to show that $$Hf \circ \beta_a \circ \alpha_a = \beta_b \circ \alpha_b \circ Ff$$We know that by the commutativity of the left square,$$\beta_b \circ \alpha_b \circ Ff = \beta_b \circ Gf \circ \alpha_a$$and by the commutativity of the second square, we have $$\beta_b \circ Gf \circ \alpha_a = Hf \circ \beta_a \circ \alpha_a$$hence, it is a natural transformation.
+\end{customproof}
+
+\begin{corollary}
+\
+
+$D^C$, the functor category, is indeed a category.
+\end{corollary}
+
+\begin{customproof}
+\
+
+We just proved associativity by vertical composition, we have the identity natural transformation for all objects, so it is a category.
+\end{customproof}
+
+\begin{definition}[Vertical Composition]
+\
+
+If $\alpha: F \to G$, $\beta: G \to H$ are natural transformations, then the operation $\beta \cdot \alpha$ defined in the prior lemma is called \textbf{vertical composition}. This is because the following two diagrams are equivalent:
+
+\[
+\begin{tikzcd}[
+    column sep=4cm, 
+    row sep=huge, 
+    nodes={scale=1.5}, 
+    every arrow/.append style={line width=1pt} 
+]
+    C & D
+    \arrow[from=1-1, to=1-2, "G"{name=G}]
+    \arrow[from=1-1, to=1-2, bend left = 60, "F"{name=F}]
+    \arrow[from=1-1, to=1-2, bend right = 60, "H"'{name=H}]
+    \arrow[Rightarrow, from=F, to=G, "\alpha", shorten <= 5pt, shorten >= 5pt]
+    \arrow[Rightarrow, from=G, to=H, "\beta", shorten <= 5pt, shorten >= 5pt]
+\end{tikzcd}
+\]
+
+\[
+\begin{tikzcd}[
+    column sep=4cm, 
+    row sep=huge, 
+    nodes={scale=1.5}, 
+    every arrow/.append style={line width=1pt} 
+]
+    C & D
+    \arrow[from=1-1, to=1-2, bend left = 60, "F"{name=F}]
+    \arrow[from=1-1, to=1-2, bend right = 60, "H"'{name=H}]
+    \arrow[Rightarrow, from=F, to=H, "\beta \cdot \alpha", shorten <= 5pt, shorten >= 5pt]
+\end{tikzcd}
+\]
+
+Sorry if this looks super cursed XD
+\end{definition}
+
+\begin{definition}[Horizontal Composition]
+\
+
+Given functors $F, G: C \to D$, $H, K: D \to E$ and natural transformations $\alpha: F \to G$, $\beta: H\to K$, then the natural transformation $\beta * \alpha: HF \to KG$ is the \textbf{horizontal composition} of these natural transformations, where the component at $c \in C$ is defined as $$(\beta * \alpha)_c = \beta_{G_c} \circ H\alpha_c = K_{\alpha_c} \circ \beta_{F_c}$$The following two diagrams are equivalent:
+
+\[
+\begin{tikzcd}[
+    column sep=4cm, 
+    row sep=huge, 
+    nodes={scale=1.5}, 
+    every arrow/.append style={line width=1pt} 
+]
+    C & D & E
+    \arrow[from=1-1, to=1-2, bend left = 60, "F"{name=F}]
+    \arrow[from=1-1, to=1-2, bend right = 60, "G"'{name=G}]
+    \arrow[from=1-2, to=1-3, bend left = 60, "H"{name=H}]
+    \arrow[from=1-2, to=1-3, bend right = 60, "K"'{name=K}]
+    \arrow[Rightarrow, from=F, to=G, "\alpha", shorten <= 5pt, shorten >= 5pt]
+    \arrow[Rightarrow, from=H, to=K, "\beta", shorten <= 5pt, shorten >= 5pt]
+\end{tikzcd}
+\]
+
+\[
+\begin{tikzcd}[
+    column sep=4cm, 
+    row sep=huge, 
+    nodes={scale=1.5}, 
+    every arrow/.append style={line width=1pt} 
+]
+    C & E
+    \arrow[from=1-1, to=1-2, bend left = 60, "HF"{name=F}]
+    \arrow[from=1-1, to=1-2, bend right = 60, "KG"'{name=H}]
+    \arrow[Rightarrow, from=F, to=H, "\beta * \alpha", shorten <= 5pt, shorten >= 5pt]
+\end{tikzcd}
+\]
+
+And we can illustrate the component $(\beta * \alpha)_c$ by the commutativity of the following square:
+
+\[\begin{tikzcd}[
+    column sep=huge, 
+    row sep=huge, 
+    nodes={scale=1.5}, 
+    every arrow/.append style={line width=1pt} 
+]
+    HFc & KFc\\
+    HGc & KGc
+    \arrow[from=1-1, to=1-2, "\beta_{F_c}"]
+    \arrow[from=1-1, to=2-1, "H\alpha_c"']
+    \arrow[from=2-1, to=2-2, "\beta_{G_c}"']
+    \arrow[from=1-2, to=2-2, "K\alpha_c"]
+    \arrow[dashed,from=1-1, to=2-2, "(\beta * \alpha)_c"]
+\end{tikzcd}\]
+\end{definition}
+
+\begin{lemma}
+\
+
+Prove that $\beta * \alpha$ does indeed define a natural transformation. 
+\end{lemma}
+
+\begin{customproof}
+\
+
+To show naturality, we want to show that for some $f: c \to c'$, the following square commutes: 
+
+\[\begin{tikzcd}[
+    column sep=huge, 
+    row sep=huge, 
+    nodes={scale=1.5}, 
+    every arrow/.append style={line width=1pt} 
+]
+    HFc & KGc\\
+    HFc'& KGc'
+    \arrow[from=1-1, to=1-2, "(\beta \circ \alpha)_c"]
+    \arrow[from=1-1, to=2-1, "HFf"']
+    \arrow[from=2-1, to=2-2, "(\beta \circ \alpha)_{c'}"']
+    \arrow[from=1-2, to=2-2, "KGf"]
+\end{tikzcd}\]But if we expand each $(\beta\circ\alpha)_c$, we get 
+
+\[\begin{tikzcd}[
+    column sep=huge, 
+    row sep=huge, 
+    nodes={scale=1.5}, 
+    every arrow/.append style={line width=1pt} 
+]
+    HFc & HGc & KGc\\
+    HFc'& HGc' & KGc'
+    \arrow[from=1-1, to=1-2, "H\alpha_c"]
+    \arrow[from=1-1, to=2-1, "HFf"']
+    \arrow[from=2-1, to=2-2, "H\alpha_{c'}"']
+    \arrow[from=1-2, to=2-2, "HGf"]
+    \arrow[from=1-2, to=1-3, "\beta_{G_c}"]
+    \arrow[from=1-3, to=2-3, "KGf"]
+    \arrow[from=2-2, to=2-3, "\beta_{G_c'}"']
+\end{tikzcd}\]But notice that the right hand square is indeed commutative because $\beta$ is natural, and the left hand square commutes because it's the functor $H$ applied to the commutative square of $\alpha$, and the image of commutative squares indeed commutes. Hence, the whole square commutes.
+\end{customproof}
+
+\begin{definition}[Whiskering]
+\
+
+The natural transformation $$L\beta F: LHF \to LKF$$is called \textbf{whiskering} 
+
+\[
+\begin{tikzcd}[
+    column sep=4cm, 
+    row sep=huge, 
+    nodes={scale=1.5}, 
+    every arrow/.append style={line width=1pt} 
+]
+    C & D & E & F
+    \arrow[from=1-1, to=1-2, "F"]
+    \arrow[from=1-3, to=1-4, "L"]
+    \arrow[from=1-2, to=1-3, bend left = 60, "H"{name=F}]
+    \arrow[from=1-2, to=1-3, bend right = 60, "K"'{name=H}]
+    \arrow[Rightarrow, from=F, to=H, "\beta", shorten <= 5pt, shorten >= 5pt]
+\end{tikzcd}
+\]
+\end{definition}
+
+\begin{lemma}
+\
+
+Show that given functors and natural transformations defined below, in what is called a \textbf{middle four interchange} 
+\[
+\begin{tikzcd}[
+    column sep=4cm, 
+    row sep=huge, 
+    nodes={scale=1.5}, 
+    every arrow/.append style={line width=1pt} 
+]
+    C & D & E
+    \arrow[from=1-1, to=1-2, bend left = 60, "F"{name=F}]
+    \arrow[from=1-1, to=1-2, bend right = 60, "G"'{name=G}]
+    \arrow[from=1-1, to=1-2, "H"{name=H}]
+    \arrow[from=1-2, to=1-3, bend left = 60, "J"{name=J}]
+    \arrow[from=1-2, to=1-3, bend right = 60, "L"'{name=L}]
+    \arrow[from=1-2, to=1-3, "K"{name=K}]
+    \arrow[Rightarrow, from=F, to=H, "\alpha", shorten <= 5pt, shorten >= 5pt]
+    \arrow[Rightarrow, from=H, to=G, "\beta", shorten <= 5pt, shorten >= 5pt]
+    \arrow[Rightarrow, from=J, to=K, "\gamma", shorten <= 5pt, shorten >= 5pt]
+    \arrow[Rightarrow, from=K, to=L, "\delta", shorten <= 5pt, shorten >= 5pt]
+\end{tikzcd}
+\]
+
+That the following diagrams are indeed equal: 
+
+\[
+\begin{tikzcd}[
+    column sep=4cm, 
+    row sep=huge, 
+    nodes={scale=1.5}, 
+    every arrow/.append style={line width=1pt} 
+]
+    C & D & E
+    \arrow[from=1-1, to=1-2, bend left = 60, "F"{name=F}]
+    \arrow[from=1-1, to=1-2, bend right = 60, "G"'{name=G}]
+    \arrow[from=1-2, to=1-3, bend left = 60, "J"{name=J}]
+    \arrow[from=1-2, to=1-3, bend right = 60, "L"'{name=L}]
+    \arrow[Rightarrow, from=F, to=G, "\beta \cdot \alpha", shorten <= 5pt, shorten >= 5pt]
+    \arrow[Rightarrow, from=J, to=L, "\delta \cdot \gamma", shorten <= 5pt, shorten >= 5pt]
+\end{tikzcd}
+\]
+\[
+\begin{tikzcd}[
+    column sep=4cm, 
+    row sep=huge, 
+    nodes={scale=1.5}, 
+    every arrow/.append style={line width=1pt} 
+]
+    C & E
+    \arrow[from=1-1, to=1-2, "KG"{name=G}]
+    \arrow[from=1-1, to=1-2, bend left = 60, "JF"{name=F}]
+    \arrow[from=1-1, to=1-2, bend right = 60, "LH"'{name=H}]
+    \arrow[Rightarrow, from=F, to=G, "\gamma * \alpha", shorten <= 5pt, shorten >= 5pt]
+    \arrow[Rightarrow, from=G, to=H, "\delta * \beta", shorten <= 5pt, shorten >= 5pt]
+\end{tikzcd}
+\]
+\end{lemma}
+
+\begin{customproof}
+\
+
+We want to show that the components of two are equal, so $((\beta \cdot \alpha) * (\delta \cdot \gamma))_c = ((\gamma * \alpha) \cdot (\delta * \beta))_c$. 
+
+Then, $((\beta \cdot \alpha) * (\delta \cdot \gamma))_c = (\delta \cdot \gamma)_{G_c} \circ J(\beta \cdot \alpha)_c =  \delta_{Kc} \circ \gamma_{Jc} \circ \beta_{Hc} \circ \alpha_{Fc}$
+
+But $((\gamma * \alpha) \cdot (\delta * \beta))_c =(\gamma * \alpha)_{Fc} \circ (\delta * \beta)_{Hc} = \delta_{Kc}  \circ \gamma_{Jc} \circ \beta_{Hc} \circ \alpha_{Fc}$ (This line is so questionable, please check)
+\end{customproof}
+
+\begin{definition}[2-category]
+\
+
+A \textbf{2-category} is comprised of:
+
+\begin{enumerate}
+    \item objects, like categories $C$
+    \item $1$-morphisms between pairs of objects, for example functors $C \to D$
+    \item $2$-morphisms between parallel pairs of $1$-morphisms, for example, the natural transformations between functors $F \to G$
+    \item The objects and $1$-morphisms form a category
+    \item For each pair of fixed objects $C$ and $D$, the $1$-morphisms and $2$-morphisms form a category where the $1$ morphisms are objects, and the $2$-morphisms are $1$-morphisms
+    \item There is a category whose objects are the objects in which a morphism from $C \to D$ is a $2$-cell $F, G: C\to D$, and $\alpha: F \to G$
+    \item The horizontal composite $1_H * 1_F$ of identities under vertical composition must be the identity $1_{HF}$ for the composite $1$-morphisms.
+    \item The law of the middle four interchange holds.
+\end{enumerate}
+\end{definition}
+
+\end{document}
